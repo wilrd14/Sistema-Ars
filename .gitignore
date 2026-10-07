@@ -1,0 +1,21 @@
+# Maven
+target/
+
+# Configuración local con credenciales (usar db.properties.example como plantilla)
+db.properties
+
+# Logs
+*.log
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+

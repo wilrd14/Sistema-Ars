@@ -1,0 +1,5 @@
+# Copia este archivo como db.properties (en la raíz del proyecto) y ajusta tus datos.
+# db.properties está en .gitignore: NO lo subas al repositorio.
+db.url=jdbc:mysql://localhost:3306/vitasalud?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Santo_Domingo&connectTimeout=5000
+db.user=root
+db.password=cambia_esta_clave

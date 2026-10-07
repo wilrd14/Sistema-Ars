@@ -1,0 +1,160 @@
+/* ARS VitaSalud — hoja de estilos única (PRD sección 11).
+ * REGLA DEL EQUIPO: ningún color va escrito en un FXML ni en el código Java; se usan solo estas clases.
+ * Los colores se definen una sola vez en .root (JavaFX no soporta var() de CSS web). */
+
+.root {
+    -vita-verde: #0F4C3A;
+    -vita-hoja: #177350;
+    -vita-hoja-hover: #0F5C40;
+    -vita-menta: #E5F3EC;
+    -vita-ambar: #F2A93B;
+    -vita-tinta: #15232D;
+    -vita-niebla: #F3F6F4;
+    -vita-coral: #C2410C;
+    -vita-borde: #D5E0E7;
+    -vita-borde-campo: #B7C6D0;
+    -vita-texto-2: #3D5361;
+    -vita-texto-3: #4A6272;
+    -vita-tabla-head: #E7EFEA;
+    -vita-solo-lectura: #EEF3F1;
+    -vita-fila-hover: #F3F8F5;
+    -vita-hoja-clara: #A7CDB9;
+    -vita-sidebar-texto: #CFE5DA;
+    -vita-sidebar-hover: #1D6150;
+
+    -fx-font-family: "Figtree", "Segoe UI", system;
+    -fx-font-size: 14px;
+    -fx-background-color: -vita-niebla;
+    -fx-text-fill: -vita-tinta;
+    -fx-focus-color: -vita-hoja;
+    -fx-faint-focus-color: transparent;
+}
+
+.label { -fx-text-fill: -vita-tinta; }
+.texto-secundario { -fx-text-fill: -vita-texto-3; -fx-font-size: 13px; }
+
+/* ---------- Marca ---------- */
+.logo-mark {
+    -fx-background-color: -vita-menta;
+    -fx-background-radius: 10;
+    -fx-min-width: 40; -fx-min-height: 40; -fx-pref-width: 40; -fx-pref-height: 40;
+    -fx-alignment: center;
+    -fx-text-fill: -vita-hoja;
+    -fx-font-size: 22px; -fx-font-weight: bold;
+}
+.brand-name { -fx-text-fill: white; -fx-font-size: 17px; -fx-font-weight: bold; }
+.brand-name-large { -fx-text-fill: white; -fx-font-size: 26px; -fx-font-weight: bold; }
+.brand-sub { -fx-text-fill: -vita-hoja-clara; -fx-font-size: 12px; }
+
+/* ---------- Inicio de sesión ---------- */
+.login-left { -fx-background-color: -vita-verde; -fx-padding: 0 80 0 80; }
+.login-headline { -fx-text-fill: white; -fx-font-size: 40px; -fx-font-weight: bold; }
+.login-lead { -fx-text-fill: -vita-hoja-clara; -fx-font-size: 17px; }
+.login-right { -fx-background-color: -vita-niebla; }
+.mensaje-error { -fx-text-fill: #9A3412; -fx-font-size: 13px; -fx-font-weight: 600; }
+
+.seg { -fx-background-color: -vita-tabla-head; -fx-background-radius: 10; -fx-padding: 4; }
+.seg-btn {
+    -fx-background-color: transparent; -fx-background-insets: 0; -fx-background-radius: 8;
+    -fx-text-fill: -vita-texto-2; -fx-font-weight: 600; -fx-padding: 8 12; -fx-cursor: hand;
+}
+.seg-btn:selected { -fx-background-color: white; -fx-text-fill: -vita-verde; -fx-font-weight: bold; }
+
+/* ---------- Barra lateral ---------- */
+.sidebar { -fx-background-color: -vita-verde; -fx-padding: 20 14 16 14; }
+.brand { -fx-padding: 0 8 20 8; }
+.nav-group { -fx-text-fill: -vita-hoja-clara; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 14 12 4 12; }
+.nav {
+    -fx-background-color: transparent; -fx-background-insets: 0; -fx-background-radius: 8;
+    -fx-text-fill: -vita-sidebar-texto; -fx-font-size: 14px; -fx-padding: 10 12; -fx-cursor: hand;
+}
+.nav:hover { -fx-background-color: -vita-sidebar-hover; }
+.nav:selected { -fx-background-color: -vita-sidebar-hover; -fx-text-fill: white; -fx-font-weight: bold; }
+.nav-logout {
+    -fx-background-color: transparent; -fx-background-insets: 0; -fx-background-radius: 8;
+    -fx-text-fill: -vita-sidebar-texto; -fx-alignment: center-left; -fx-padding: 10 12; -fx-cursor: hand;
+}
+.nav-logout:hover { -fx-background-color: -vita-sidebar-hover; -fx-text-fill: white; }
+
+/* ---------- Encabezado ---------- */
+.header { -fx-background-color: white; -fx-padding: 0 32 0 32; -fx-border-color: transparent transparent -vita-borde transparent; }
+.header-title { -fx-text-fill: -vita-verde; -fx-font-size: 20px; -fx-font-weight: bold; }
+.header-subtitle { -fx-text-fill: -vita-texto-3; -fx-font-size: 13px; }
+.user-pill { -fx-background-color: -vita-niebla; -fx-background-radius: 999; -fx-padding: 6 16 6 8; }
+.avatar {
+    -fx-background-color: -vita-hoja; -fx-background-radius: 999;
+    -fx-min-width: 34; -fx-min-height: 34; -fx-pref-width: 34; -fx-pref-height: 34;
+    -fx-alignment: center; -fx-text-fill: white; -fx-font-weight: bold;
+}
+.user-name { -fx-font-size: 13px; -fx-font-weight: bold; }
+.user-role { -fx-font-size: 12px; -fx-text-fill: -vita-texto-3; }
+.contenido { -fx-padding: 28 32 28 32; -fx-background-color: -vita-niebla; }
+
+/* ---------- Tarjetas y títulos ---------- */
+.card {
+    -fx-background-color: white; -fx-border-color: -vita-borde; -fx-border-radius: 12;
+    -fx-background-radius: 12; -fx-padding: 24;
+}
+.section-title { -fx-text-fill: -vita-verde; -fx-font-size: 16px; -fx-font-weight: bold; }
+.kpi-value { -fx-text-fill: -vita-verde; -fx-font-size: 32px; -fx-font-weight: bold; }
+
+/* ---------- Formularios ---------- */
+.field-label { -fx-text-fill: -vita-texto-2; -fx-font-size: 12px; -fx-font-weight: 600; }
+.field, .text-field, .password-field, .combo-box, .date-picker {
+    -fx-background-color: white; -fx-background-radius: 8; -fx-border-radius: 8;
+    -fx-border-color: -vita-borde-campo; -fx-pref-height: 40;
+}
+.field:focused, .text-field:focused, .password-field:focused, .combo-box:focused, .date-picker:focused {
+    -fx-border-color: -vita-hoja; -fx-border-width: 2;
+}
+.field-readonly { -fx-background-color: -vita-solo-lectura; }
+
+/* ---------- Botones ---------- */
+.btn {
+    -fx-background-color: -vita-hoja; -fx-background-insets: 0; -fx-background-radius: 8;
+    -fx-text-fill: white; -fx-pref-height: 40; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 0 20;
+}
+.btn:hover { -fx-background-color: -vita-hoja-hover; }
+.btn:disabled { -fx-opacity: 0.55; }
+.btn-ghost {
+    -fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8;
+    -fx-border-color: -vita-borde-campo; -fx-border-radius: 8;
+    -fx-text-fill: -vita-verde; -fx-pref-height: 40; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 0 20;
+}
+.btn-ghost:hover { -fx-background-color: -vita-menta; }
+.btn-danger {
+    -fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8;
+    -fx-border-color: -vita-coral; -fx-border-radius: 8;
+    -fx-text-fill: #9A3412; -fx-pref-height: 40; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 0 20;
+}
+.btn-danger:hover { -fx-background-color: #F9E1DC; }
+
+/* ---------- Chips de estado (siempre con texto, nunca solo color) ---------- */
+.chip { -fx-background-radius: 999; -fx-padding: 3 10; -fx-font-size: 12px; -fx-font-weight: bold; }
+.chip-pendiente { -fx-background-color: #FDF0D5; -fx-text-fill: #6B4200; }
+.chip-revision { -fx-background-color: #DDE9F7; -fx-text-fill: #1C4470; }
+.chip-aprobada { -fx-background-color: #DDF1E5; -fx-text-fill: #0F5C40; }
+.chip-negada { -fx-background-color: #F9E1DC; -fx-text-fill: #8A2A14; }
+
+/* ---------- Pestañas tipo píldora ---------- */
+.tab {
+    -fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 999;
+    -fx-border-color: -vita-borde-campo; -fx-border-radius: 999;
+    -fx-text-fill: -vita-texto-2; -fx-padding: 6 16; -fx-cursor: hand;
+}
+.tab:selected { -fx-background-color: -vita-verde; -fx-border-color: -vita-verde; -fx-text-fill: white; -fx-font-weight: bold; }
+
+/* ---------- Tablas ---------- */
+.table-view { -fx-background-color: white; -fx-border-color: -vita-borde; -fx-border-radius: 12; -fx-background-radius: 12; }
+.table-view .column-header-background { -fx-background-color: -vita-tabla-head; -fx-background-radius: 12 12 0 0; }
+.table-view .column-header, .table-view .filler { -fx-background-color: -vita-tabla-head; -fx-size: 40; }
+.table-view .column-header .label { -fx-text-fill: -vita-texto-2; -fx-font-size: 12px; -fx-font-weight: bold; }
+.table-row-cell:hover { -fx-background-color: -vita-fila-hover; }
+.table-row-cell:selected { -fx-background-color: -vita-menta; }
+.table-row-cell:selected .text { -fx-fill: -vita-tinta; }
+
+/* ---------- Avisos ---------- */
+.alert-success {
+    -fx-background-color: #DDF1E5; -fx-border-color: #9FD3B5; -fx-border-radius: 10;
+    -fx-background-radius: 10; -fx-padding: 12 16;
+}
