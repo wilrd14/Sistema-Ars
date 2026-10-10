@@ -1,0 +1,34 @@
+# Entorno completo de ARS VitaSalud sin instalar nada local (solo Docker Desktop).
+# Ver README, sección "Trabajar con Docker".
+services:
+  db:
+    image: mysql:8.4
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_0900_ai_ci"]
+    environment:
+      MYSQL_ROOT_PASSWORD: vitasalud
+    ports:
+      - "${DB_PORT:-3308}:3306"   # para MySQL Workbench en el host: localhost:3308, root / vitasalud
+    volumes:
+      - vitasalud-db:/var/lib/mysql
+      - ./database:/sql:ro
+      - ./docker/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -pvitasalud --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${APP_PORT:-6080}:6080"  # ventana de la app: http://localhost:6080
+    volumes:
+      - .:/app                    # tu código; los cambios se ven sin reconstruir la imagen
+      - vitasalud-target:/app/target
+
+volumes:
+  vitasalud-db:
+  vitasalud-target:
