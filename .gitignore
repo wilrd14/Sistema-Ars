@@ -19,3 +19,6 @@ db.properties
 .DS_Store
 Thumbs.db
 
+
+# Logs
+logs/

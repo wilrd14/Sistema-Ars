@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Usuarios y roles (RF-SEG-04, RF-SEG-05, RF-SEG-06): tarjetas por rol, tabla de usuarios y panel de edición. -->
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" spacing="20"
+      fx:controller="edu.uasd.vitasalud.controller.interno.UsuariosController">
+
+    <Label styleClass="section-title" text="Roles del sistema"/>
+    <HBox fx:id="boxRoles" spacing="16"/>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <VBox styleClass="card" spacing="12" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label styleClass="section-title" text="Usuarios"/>
+                <TextField fx:id="txtFiltro" styleClass="field" promptText="Buscar por nombre, usuario o cargo"
+                           HBox.hgrow="ALWAYS" onAction="#buscar"/>
+                <Button styleClass="btn-ghost" text="Buscar" onAction="#buscar"/>
+                <Button styleClass="btn" text="Nuevo usuario" onAction="#nuevo"/>
+            </HBox>
+            <TableView fx:id="tabla" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colNombre" text="Nombre" prefWidth="170"/>
+                    <TableColumn fx:id="colUsuario" text="Usuario" prefWidth="110"/>
+                    <TableColumn fx:id="colPerfil" text="Perfil" prefWidth="110"/>
+                    <TableColumn fx:id="colRol" text="Rol" prefWidth="160"/>
+                    <TableColumn fx:id="colPrestador" text="Prestador" prefWidth="150"/>
+                    <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+
+        <VBox styleClass="card" spacing="8" minWidth="340" prefWidth="340" maxWidth="340">
+            <Label fx:id="lblTituloForm" styleClass="section-title" text="Nuevo usuario"/>
+
+            <Label styleClass="field-label" text="Nombre completo"/>
+            <TextField fx:id="txtNombre" styleClass="field"/>
+
+            <Label styleClass="field-label" text="Usuario"/>
+            <TextField fx:id="txtUsername" styleClass="field"/>
+
+            <Label styleClass="field-label" text="Rol"/>
+            <ComboBox fx:id="cmbRol" styleClass="field" maxWidth="Infinity"/>
+            <Label fx:id="lblPerfil" styleClass="texto-secundario"/>
+
+            <Label styleClass="field-label" text="Cargo (opcional)"/>
+            <TextField fx:id="txtCargo" styleClass="field"/>
+
+            <VBox fx:id="boxPrestador" spacing="8">
+                <Label styleClass="field-label" text="Prestador"/>
+                <ComboBox fx:id="cmbPrestador" styleClass="field" maxWidth="Infinity"/>
+            </VBox>
+
+            <Label fx:id="lblClave" styleClass="field-label" text="Contraseña inicial"/>
+            <PasswordField fx:id="txtClave" styleClass="field"/>
+            <Label fx:id="lblAyudaClave" styleClass="texto-secundario" wrapText="true"
+                   text="Mínimo 8 caracteres, con letras y números."/>
+
+            <Label fx:id="lblError" styleClass="mensaje-error" wrapText="true"/>
+
+            <HBox spacing="8">
+                <Button fx:id="btnGuardar" styleClass="btn" text="Guardar" onAction="#guardar"/>
+                <Button fx:id="btnLimpiar" styleClass="btn-ghost" text="Cancelar" onAction="#nuevo"/>
+            </HBox>
+            <Button fx:id="btnClave" styleClass="btn-ghost" text="Restablecer contraseña" maxWidth="Infinity"
+                    onAction="#restablecerClave"/>
+            <Button fx:id="btnDesbloquear" styleClass="btn-ghost" text="Desbloquear cuenta" maxWidth="Infinity"
+                    onAction="#desbloquear"/>
+            <Button fx:id="btnEstado" styleClass="btn-danger" text="Desactivar" maxWidth="Infinity"
+                    onAction="#cambiarEstado"/>
+        </VBox>
+    </HBox>
+</VBox>

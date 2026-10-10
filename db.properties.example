@@ -3,3 +3,9 @@
 db.url=jdbc:mysql://localhost:3306/vitasalud?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Santo_Domingo&connectTimeout=5000
 db.user=root
 db.password=cambia_esta_clave
+
+# Datos de contacto del administrador (RF-SEG-09: ayuda del login). Datos ficticios; cámbialos si hace falta.
+ayuda.contacto.nombre=Administrador de ARS VitaSalud
+ayuda.contacto.correo=soporte@vitasalud.example
+ayuda.contacto.telefono=809-555-0100
+ayuda.contacto.horario=Lunes a viernes, 8:00 a.m. - 5:00 p.m.
