@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Reportes de la Consola interna (RF-REP-02, RF-REP-03, RF-REP-04). Solo clases de vitasalud.css. -->
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="edu.uasd.vitasalud.controller.interno.ReportesController" spacing="16">
+    <FlowPane fx:id="tarjetas" hgap="16" vgap="16"/>
+
+    <VBox fx:id="detalle" styleClass="card" spacing="12" VBox.vgrow="ALWAYS" visible="false" managed="false">
+        <Label fx:id="lblTitulo" styleClass="section-title"/>
+        <HBox alignment="BOTTOM_LEFT" spacing="12">
+            <VBox spacing="4">
+                <Label styleClass="field-label" text="Desde"/>
+                <DatePicker fx:id="dpDesde" promptText="dd/mm/aaaa"/>
+            </VBox>
+            <VBox spacing="4">
+                <Label styleClass="field-label" text="Hasta"/>
+                <DatePicker fx:id="dpHasta" promptText="dd/mm/aaaa"/>
+            </VBox>
+            <Button fx:id="btnGenerar" styleClass="btn" text="Generar" onAction="#generar"/>
+            <Button styleClass="btn-ghost" text="Limpiar fechas" onAction="#limpiar"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="btnExportar" styleClass="btn-ghost" text="Exportar a CSV" onAction="#exportar" disable="true"/>
+        </HBox>
+        <Label fx:id="lblResumen" styleClass="texto-secundario" wrapText="true"/>
+        <Label fx:id="lblMensaje" styleClass="aviso-panel" wrapText="true" visible="false" managed="false"/>
+        <TableView fx:id="tabla" VBox.vgrow="ALWAYS" minHeight="240"/>
+    </VBox>
+</VBox>

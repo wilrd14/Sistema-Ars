@@ -198,7 +198,12 @@ database/       01_esquema.sql · 02_datos_prueba.sql
 - Antes del pull request: `git pull origin main`, `.\mvnw.cmd test` y comprobar que la app abre.
 - Cambios al esquema SQL: avisar al grupo y modificar `01_esquema.sql` por pull request.
 
-## 8. Pendiente de la fase 0
+## 8. Trabajo entregado por integrante
+
+- **Williams Villavizar Hernández (SEG + REP)** — 10/10/2026 16:10: ver
+  [`docs/TRABAJO_WILLIAMS_VILLAVIZAR.md`](docs/TRABAJO_WILLIAMS_VILLAVIZAR.md) (qué se hizo y cómo integrarlo con los demás módulos).
+
+## 9. Pendiente de la fase 0
 
 - [ ] Agregar la fuente **Figtree** (`Figtree-Regular/Medium/SemiBold/Bold.ttf`, licencia OFL) en `src/main/resources/fonts/`.
       Sin ella la app usa Segoe UI.
