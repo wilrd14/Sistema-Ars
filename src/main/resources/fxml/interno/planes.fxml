@@ -19,27 +19,27 @@
     </padding>
 
     <Label text="Planes y coberturas" styleClass="section-title"/>
-    <Label text="Consulta los planes mÃ©dicos y las coberturas disponibles."
+    <Label text="Consulta los planes médicos y las coberturas disponibles."
            styleClass="texto-secundario"/>
 
     <HBox spacing="10" alignment="CENTER_LEFT">
-        <Label text="Filtrar por categorÃ­a:"/>
+        <Label text="Filtrar por categoría:"/>
         <ComboBox fx:id="filtroCategoria"
-                  promptText="Todas las categorÃ­as"
+                  promptText="Todas las categorías"
                   prefWidth="240"/>
         <Button text="Filtrar" onAction="#filtrarCoberturas"/>
         <Button text="Limpiar" onAction="#limpiarFiltro"/>
         <Button text="Actualizar" onAction="#cargarDatos"/>
     </HBox>
 
-    <Label text="Planes mÃ©dicos" styleClass="section-title"/>
+    <Label text="Planes médicos" styleClass="section-title"/>
 
     <TableView fx:id="tablaPlanes" prefHeight="220">
         <columns>
             <TableColumn fx:id="colId" text="ID" prefWidth="55"/>
-            <TableColumn fx:id="colCodigo" text="CÃ³digo" prefWidth="100"/>
+            <TableColumn fx:id="colCodigo" text="Código" prefWidth="100"/>
             <TableColumn fx:id="colNombre" text="Nombre del plan" prefWidth="180"/>
-            <TableColumn fx:id="colDescripcion" text="DescripciÃ³n" prefWidth="280"/>
+            <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="280"/>
             <TableColumn fx:id="colPrima" text="Prima mensual" prefWidth="120"/>
             <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
         </columns>
@@ -50,12 +50,12 @@
     <TableView fx:id="tablaCoberturas" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="colCoberturaId" text="ID" prefWidth="55"/>
-            <TableColumn fx:id="colCategoria" text="CategorÃ­a" prefWidth="150"/>
+            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="150"/>
             <TableColumn fx:id="colPorcentaje" text="Cobertura (%)" prefWidth="110"/>
             <TableColumn fx:id="colCopago" text="Copago fijo" prefWidth="110"/>
             <TableColumn fx:id="colTope" text="Tope anual" prefWidth="120"/>
-            <TableColumn fx:id="colCarencia" text="DÃ­as de carencia" prefWidth="120"/>
-            <TableColumn fx:id="colPrecertificacion" text="PrecertificaciÃ³n" prefWidth="140"/>
+            <TableColumn fx:id="colCarencia" text="Días de carencia" prefWidth="120"/>
+            <TableColumn fx:id="colPrecertificacion" text="Precertificación" prefWidth="140"/>
         </columns>
     </TableView>
 
