@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="edu.uasd.vitasalud.controller.interno.PlanesController"
+      spacing="16"
+      fillWidth="true">
+
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+    </padding>
+
+    <Label text="Planes y coberturas" styleClass="section-title"/>
+    <Label text="Consulta los planes mÃ©dicos y las coberturas disponibles."
+           styleClass="texto-secundario"/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Filtrar por categorÃ­a:"/>
+        <ComboBox fx:id="filtroCategoria"
+                  promptText="Todas las categorÃ­as"
+                  prefWidth="240"/>
+        <Button text="Filtrar" onAction="#filtrarCoberturas"/>
+        <Button text="Limpiar" onAction="#limpiarFiltro"/>
+        <Button text="Actualizar" onAction="#cargarDatos"/>
+    </HBox>
+
+    <Label text="Planes mÃ©dicos" styleClass="section-title"/>
+
+    <TableView fx:id="tablaPlanes" prefHeight="220">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="55"/>
+            <TableColumn fx:id="colCodigo" text="CÃ³digo" prefWidth="100"/>
+            <TableColumn fx:id="colNombre" text="Nombre del plan" prefWidth="180"/>
+            <TableColumn fx:id="colDescripcion" text="DescripciÃ³n" prefWidth="280"/>
+            <TableColumn fx:id="colPrima" text="Prima mensual" prefWidth="120"/>
+            <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <Label text="Coberturas" styleClass="section-title"/>
+
+    <TableView fx:id="tablaCoberturas" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colCoberturaId" text="ID" prefWidth="55"/>
+            <TableColumn fx:id="colCategoria" text="CategorÃ­a" prefWidth="150"/>
+            <TableColumn fx:id="colPorcentaje" text="Cobertura (%)" prefWidth="110"/>
+            <TableColumn fx:id="colCopago" text="Copago fijo" prefWidth="110"/>
+            <TableColumn fx:id="colTope" text="Tope anual" prefWidth="120"/>
+            <TableColumn fx:id="colCarencia" text="DÃ­as de carencia" prefWidth="120"/>
+            <TableColumn fx:id="colPrecertificacion" text="PrecertificaciÃ³n" prefWidth="140"/>
+        </columns>
+    </TableView>
+
+    <Label fx:id="mensaje"
+           text="Listo para cargar los datos."
+           styleClass="texto-secundario"/>
+
+</VBox>
