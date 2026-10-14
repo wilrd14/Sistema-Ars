@@ -2,6 +2,7 @@
 package edu.uasd.vitasalud.model;
 import java.time.LocalDate;
 
+
 /**Clase que representa un afiliado de la ARS */
 
 public class Afiliado{
@@ -211,6 +212,7 @@ public class Afiliado{
 
 
 
+    
 
 
 }

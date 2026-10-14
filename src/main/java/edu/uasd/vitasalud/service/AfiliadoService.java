@@ -8,6 +8,7 @@ import edu.uasd.vitasalud.model.Afiliado;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 
 public class AfiliadoService {
 
@@ -94,6 +95,22 @@ public class AfiliadoService {
                     "Los menores sin cédula deben registrarse "
                     + "con acta de nacimiento.");
         }
+        
+        
+        
+        
 
     }
+    
+    // Obtener todos los afiliados registrados.
+    public List<Afiliado> listarAfiliados() throws SQLException {
+        return afiliadoDAO.listarAfiliados();
+    }
+
+    // Buscar afiliados por nombre o apellido.
+    public List<Afiliado> buscarPorNombre(String criterio)
+            throws SQLException {
+        return afiliadoDAO.buscarPorNombre(criterio);
+    }
+
 }

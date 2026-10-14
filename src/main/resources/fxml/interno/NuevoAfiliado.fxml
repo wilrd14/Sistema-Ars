@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="edu.uasd.vitasalud.controller.interno.NuevoAfiliadoController">
+
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER">
+            <VBox spacing="20" styleClass="contenido">
+
+                <!-- Datos del titular -->
+                <VBox spacing="16" styleClass="card">
+                    <Label text="Datos del titular" styleClass="section-title"/>
+                    <GridPane hgap="16" vgap="14">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Tipo de documento" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbTipoDocumento" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="N.º de documento" styleClass="field-label"/>
+                            <TextField fx:id="txtNumeroDocumento" styleClass="field"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <Label text="Nombres" styleClass="field-label"/>
+                            <TextField fx:id="txtNombres" styleClass="field"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <Label text="Apellidos" styleClass="field-label"/>
+                            <TextField fx:id="txtApellidos" styleClass="field"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                            <Label text="NSS" styleClass="field-label"/>
+                            <TextField fx:id="txtNss" styleClass="field"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                            <Label text="Fecha de nacimiento" styleClass="field-label"/>
+                            <DatePicker fx:id="dpFechaNacimiento" maxWidth="Infinity"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                            <Label text="Sexo" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbSexo" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                            <Label text="Estado civil" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbEstadoCivil" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                            <Label text="Nacionalidad" styleClass="field-label"/>
+                            <TextField fx:id="txtNacionalidad" styleClass="field"/>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+
+                <!-- Contacto y ubicación -->
+                <VBox spacing="16" styleClass="card">
+                    <Label text="Contacto y ubicación" styleClass="section-title"/>
+                    <GridPane hgap="16" vgap="14">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Tipo de teléfono" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbTipoTelefono" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="Teléfono" styleClass="field-label"/>
+                            <TextField fx:id="txtTelefono" styleClass="field"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2">
+                            <Label text="Correo electrónico" styleClass="field-label"/>
+                            <TextField fx:id="txtCorreo" styleClass="field"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                            <Label text="Provincia" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbProvincia" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                            <Label text="Municipio" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbMunicipio" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                            <Label text="Sector" styleClass="field-label"/>
+                            <TextField fx:id="txtSector" styleClass="field"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                            <Label text="Dirección" styleClass="field-label"/>
+                            <TextField fx:id="txtDireccion" styleClass="field"/>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+
+                <!-- Afiliación y cobertura -->
+                <VBox spacing="16" styleClass="card">
+                    <Label text="Afiliación y cobertura" styleClass="section-title"/>
+                    <GridPane hgap="16" vgap="14">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Plan" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbPlan" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="Inicio de cobertura" styleClass="field-label"/>
+                            <DatePicker fx:id="dpInicioCobertura" maxWidth="Infinity"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <Label text="RNC del empleador" styleClass="field-label"/>
+                            <TextField fx:id="txtEmpleadorRnc" styleClass="field"/>
+                        </VBox>
+                        <CheckBox fx:id="chkEsEstudiante" text="Es estudiante"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    </GridPane>
+                </VBox>
+
+                <!-- Dependientes -->
+                <VBox spacing="16" styleClass="card">
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <Label text="Dependientes" styleClass="section-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnAgregarDependiente" text="Agregar dependiente"
+                                styleClass="btn-ghost" onAction="#agregarDependiente"/>
+                        <Button fx:id="btnQuitarDependiente" text="Quitar"
+                                styleClass="btn-danger" onAction="#quitarDependiente"/>
+                    </HBox>
+                    <TableView fx:id="tablaDependientes" prefHeight="200">
+                        <columns>
+                            <TableColumn fx:id="colDepNombres" text="Nombres" prefWidth="200"/>
+                            <TableColumn fx:id="colDepApellidos" text="Apellidos" prefWidth="200"/>
+                            <TableColumn fx:id="colDepParentesco" text="Parentesco" prefWidth="150"/>
+                            <TableColumn fx:id="colDepFechaNacimiento" text="Fecha de nacimiento" prefWidth="170"/>
+                            <TableColumn fx:id="colDepDocumento" text="Documento" prefWidth="170"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox spacing="12" alignment="CENTER_RIGHT" styleClass="contenido">
+            <Label fx:id="lblMensaje" styleClass="mensaje-error"/>
+            <Button fx:id="btnCancelar" text="Cancelar" styleClass="btn-ghost" onAction="#cancelar"/>
+            <Button fx:id="btnBorrador" text="Guardar borrador" styleClass="btn-ghost" onAction="#guardarBorrador"/>
+            <Button fx:id="btnGuardar" text="Guardar" styleClass="btn" onAction="#guardar"/>
+        </HBox>
+    </bottom>
+</BorderPane>
