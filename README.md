@@ -68,6 +68,41 @@ Usuarios de prueba (contraseña de todos: `Vita2026!`):
 | Prestador | `clinica1` | Prestador (Clínica Ejemplo Uno) |
 | Prestador | `laboratorio2` | Prestador (Laboratorio Ejemplo Dos) — para probar RN-07 |
 
+## 2.1 Trabajar con Docker (sin instalar nada local)
+
+Alternativa a la sección 1: **solo necesitas [Docker Desktop](https://www.docker.com/products/docker-desktop/)**
+(no hace falta JDK, Maven ni MySQL). Docker levanta dos contenedores:
+
+- **`db`**: MySQL 8.4 que carga solo `01_esquema.sql` y `02_datos_prueba.sql` la primera vez.
+- **`app`**: JDK 21 + Maven con todas las dependencias ya descargadas en la imagen, y la conexión a la base
+  de datos incluida (`docker/db.properties.docker`; **no necesitas `db.properties`** local).
+
+```powershell
+docker compose up -d --build        # primera vez: tarda unos minutos (después es inmediato)
+```
+
+Abre **<http://localhost:6080>** en el navegador y pulsa *Connect*: ahí aparece la ventana de la aplicación
+(JavaFX corre en una pantalla virtual dentro del contenedor). Entra con los usuarios de la sección 2
+(`admin` / `Vita2026!` por "Personal interno"). Al arrancar, la app compila tu código tal como esté en tu carpeta.
+
+| Quiero… | Comando |
+| --- | --- |
+| Correr **todas las pruebas** | `docker compose run --rm --no-deps app ./mvnw test` |
+| Correr una clase de pruebas | `docker compose run --rm --no-deps app ./mvnw test -Dtest=UsuarioServiceTest` |
+| **Ver mis cambios** en la app | `docker compose restart app` (recompila y vuelve a abrir la ventana) |
+| Ver el log de la app | `docker compose logs -f app` |
+| Abrir una consola SQL | `docker compose exec db mysql -uroot -pvitasalud vitasalud` |
+| Apagar todo (conserva los datos) | `docker compose down` |
+| **Reiniciar la base** (si cambió el esquema) | `docker compose down -v` y luego `docker compose up -d` |
+
+Detalles:
+
+- Tu código se comparte con el contenedor (carpeta del proyecto montada en `/app`): editas en VS Code como siempre.
+- La base está disponible también desde tu PC (por ejemplo MySQL Workbench) en `localhost:3308`, usuario `root`,
+  clave `vitasalud`. Si el puerto está ocupado, cambia `DB_PORT` (y `APP_PORT` para el 6080) en un archivo `.env`.
+- Si cambia el `pom.xml` (dependencias nuevas), reconstruye la imagen: `docker compose build app`.
+- El entorno Docker es **independiente** del MySQL local de la sección 1: puedes usar uno u otro.
+
 ## 3. Cómo ejecutar las pruebas
 
 Las pruebas son JUnit 5 y viven en `src/test/java/edu/uasd/vitasalud/`. Los servicios reciben su DAO por el
@@ -198,7 +233,12 @@ database/       01_esquema.sql · 02_datos_prueba.sql
 - Antes del pull request: `git pull origin main`, `.\mvnw.cmd test` y comprobar que la app abre.
 - Cambios al esquema SQL: avisar al grupo y modificar `01_esquema.sql` por pull request.
 
-## 8. Pendiente de la fase 0
+## 8. Trabajo entregado por integrante
+
+- **Williams Villavizar Hernández (SEG + REP)** — 10/10/2026 16:10: ver
+  [`docs/TRABAJO_WILLIAMS_VILLAVIZAR.md`](docs/TRABAJO_WILLIAMS_VILLAVIZAR.md) (qué se hizo y cómo integrarlo con los demás módulos).
+
+## 9. Pendiente de la fase 0
 
 - [ ] Agregar la fuente **Figtree** (`Figtree-Regular/Medium/SemiBold/Bold.ttf`, licencia OFL) en `src/main/resources/fonts/`.
       Sin ella la app usa Segoe UI.

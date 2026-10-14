@@ -3,10 +3,12 @@ package edu.uasd.vitasalud.controller.comun;
 import edu.uasd.vitasalud.app.Menu;
 import edu.uasd.vitasalud.app.Navegador;
 import edu.uasd.vitasalud.app.Sesion;
+import edu.uasd.vitasalud.model.Perfil;
 import edu.uasd.vitasalud.model.Usuario;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.StackPane;
@@ -31,6 +33,7 @@ public class ShellController implements Navegador.Shell {
     @FXML private Label lblNombre;
     @FXML private Label lblRol;
     @FXML private StackPane contenido;
+    @FXML private TextField txtBuscar;
 
     private final ToggleGroup grupoNav = new ToggleGroup();
     private final Map<String, ToggleButton> botones = new HashMap<>();
@@ -43,6 +46,14 @@ public class ShellController implements Navegador.Shell {
         lblNombre.setText(u.getNombre());
         lblAvatar.setText(u.iniciales());
         lblRol.setText(u.getCargo() != null && !u.getCargo().isBlank() ? u.getCargo() : u.getRol().etiqueta());
+
+        // La búsqueda global es solo de la Consola interna; en el Portal del prestador no existe (RF-SEG-08).
+        if (u.getPerfil() == Perfil.INTERNO) {
+            new BuscadorGlobal(txtBuscar, u.getRol()).iniciar();
+        } else {
+            txtBuscar.setVisible(false);
+            txtBuscar.setManaged(false);
+        }
 
         // Evita que un clic sobre la opción activa la deje sin selección.
         grupoNav.selectedToggleProperty().addListener((obs, anterior, nuevo) -> {

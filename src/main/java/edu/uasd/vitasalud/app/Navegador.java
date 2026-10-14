@@ -14,7 +14,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Cambia entre el inicio de sesión y la consola del usuario, y carga las pantallas dentro de ella.
@@ -33,6 +36,7 @@ public final class Navegador {
     private static Stage stage;
     private static Scene scene;
     private static Shell shellActual;
+    private static final Map<String, String> busquedasPendientes = new HashMap<>();
 
     private Navegador() {
     }
@@ -63,6 +67,7 @@ public final class Navegador {
 
     public static void cerrarSesion() {
         Sesion.cerrar();
+        busquedasPendientes.clear();
         mostrarLogin();
     }
 
@@ -72,6 +77,26 @@ public final class Navegador {
             throw new IllegalStateException("No hay una consola abierta");
         }
         shellActual.irA(idPantalla);
+    }
+
+    /**
+     * Deja un valor de búsqueda para que la pantalla {@code tipo} lo recoja al abrirse (búsqueda global,
+     * RF-SEG-08). {@code tipo} es el id de la pantalla: {@code "afiliados"} (valor = número de afiliado),
+     * {@code "bandeja"} (valor = número de autorización) o {@code "prestadores"} (valor = RNC/cédula).
+     * <p>
+     * <b>Para quien hace esas pantallas:</b> en {@code initialize()} llama a
+     * {@code Navegador.consumirBusquedaPendiente("afiliados").ifPresent(v -> { txtBuscar.setText(v); buscar(); })}.
+     */
+    public static void setBusquedaPendiente(String tipo, String valor) {
+        busquedasPendientes.put(tipo, valor);
+    }
+
+    /**
+     * Devuelve y borra el valor dejado con {@link #setBusquedaPendiente}; vacío si no hay ninguno.
+     * Al consumirlo no se vuelve a aplicar la próxima vez que se abra la pantalla.
+     */
+    public static Optional<String> consumirBusquedaPendiente(String tipo) {
+        return Optional.ofNullable(busquedasPendientes.remove(tipo));
     }
 
     public static void registrarShell(Shell shell) {
