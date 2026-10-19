@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ProcedimientoDAOImpI implements ProcedimientoDAO {
+public class ProcedimientoDAOJdbc implements ProcedimientoDAO {
 
     @Override
     public Optional<Procedimiento> buscarPorId(Long id) throws SQLException {

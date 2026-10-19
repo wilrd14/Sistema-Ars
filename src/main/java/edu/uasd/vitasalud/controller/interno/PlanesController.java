@@ -3,8 +3,8 @@ package edu.uasd.vitasalud.controller.interno;
 
 import edu.uasd.vitasalud.dao.CoberturaDAO;
 import edu.uasd.vitasalud.dao.PlanDAO;
-import edu.uasd.vitasalud.dao.impl.CoberturaDAOImpI;
-import edu.uasd.vitasalud.dao.impl.PlanDAOlmpl;
+import edu.uasd.vitasalud.dao.impl.CoberturaDAOJdbc;
+import edu.uasd.vitasalud.dao.impl.PlanDAOJdbc;
 import edu.uasd.vitasalud.model.Cobertura;
 import edu.uasd.vitasalud.model.Plan;
 import edu.uasd.vitasalud.service.PlanService;
@@ -41,8 +41,8 @@ public class PlanesController {
     @FXML private ComboBox<String> filtroCategoria;
     @FXML private Label mensaje;
 
-    private final PlanDAO planDAO = new PlanDAOlmpl();
-    private final CoberturaDAO coberturaDAO = new CoberturaDAOImpI();
+    private final PlanDAO planDAO = new PlanDAOJdbc();
+    private final CoberturaDAO coberturaDAO = new CoberturaDAOJdbc();
     private final PlanService planService = new PlanService(planDAO, coberturaDAO);
 
     @FXML
@@ -122,3 +122,4 @@ public class PlanesController {
         alerta.showAndWait();
     }
 }
+

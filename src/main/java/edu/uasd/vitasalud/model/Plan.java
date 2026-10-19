@@ -12,7 +12,10 @@ public class Plan {
     private BigDecimal prima_mensual;
     private String estado;
 
-    public Plan(Integer id, String codigo, String nombre, String descripcion, BigDecimal prima_mensual, String estado) {
+    public Plan(Integer id, String codigo, String nombre,
+                String descripcion, BigDecimal prima_mensual,
+                String estado) {
+
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;

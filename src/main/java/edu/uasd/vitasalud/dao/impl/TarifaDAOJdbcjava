@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class TarifaDAOImpI implements TarifaDAO {
+public class TarifaDAOJdbc implements TarifaDAO {
 
     @Override
     public Optional<Tarifa> buscarPorId(Long id) throws SQLException {

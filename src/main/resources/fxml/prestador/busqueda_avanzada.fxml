@@ -1,0 +1,83 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="edu.uasd.vitasalud.controller.prestador.BusquedaController">
+
+    <top>
+        <VBox spacing="8.0">
+            <padding>
+                <Insets top="20.0" right="24.0" bottom="20.0" left="24.0"/>
+            </padding>
+
+            <Label text="Búsqueda avanzada de procedimientos"
+                   styleClass="title"/>
+
+            <Label text="Consulta los procedimientos disponibles y sus precios de referencia."
+                   styleClass="subtitle"/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="16.0">
+            <padding>
+                <Insets top="10.0" right="24.0" bottom="24.0" left="24.0"/>
+            </padding>
+
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                <TextField fx:id="campoBusqueda"
+                           promptText="Código o descripción del procedimiento"
+                           styleClass="field"
+                           HBox.hgrow="ALWAYS"/>
+
+                <Button text="Buscar"
+                        onAction="#buscarProcedimientos"
+                        styleClass="btn"/>
+
+                <Button text="Limpiar"
+                        onAction="#limpiarBusqueda"
+                        styleClass="btn-ghost"/>
+            </HBox>
+
+            <Label text="Resultados de la búsqueda"
+                   styleClass="section-title"/>
+
+            <TableView fx:id="tablaProcedimientos"
+                       VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="columnaCodigo"
+                                 text="Código"
+                                 prefWidth="120.0"/>
+
+                    <TableColumn fx:id="columnaDescripcion"
+                                 text="Descripción"
+                                 prefWidth="350.0"/>
+
+                    <TableColumn fx:id="columnaCategoria"
+                                 text="Categoría"
+                                 prefWidth="160.0"/>
+
+                    <TableColumn fx:id="columnaPrecio"
+                                 text="Precio de referencia"
+                                 prefWidth="180.0"/>
+                </columns>
+            </TableView>
+
+            <Label fx:id="etiquetaEstado"
+                   text="Introduce un criterio para buscar procedimientos."
+                   styleClass="subtitle"/>
+        </VBox>
+    </center>
+
+</BorderPane>

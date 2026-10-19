@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PlanDAOlmpl implements PlanDAO {
+public class PlanDAOJdbc implements PlanDAO {
 
     @Override
     public Optional<Plan> buscarPorId(String id) throws SQLException {
@@ -109,8 +109,24 @@ public class PlanDAOlmpl implements PlanDAO {
     }
 
     @Override
+    public boolean tieneAfiliados(int id) throws SQLException {
+        String sql = "SELECT COUNT(*) "
+                + "FROM afiliado WHERE plan_id = ?";
+
+        try (Connection conn = ConexionBD.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        }
+    }
+
+    @Override
     public void eliminar(int id) throws SQLException {
-        String sql = "DELETE FROM plan WHERE id = ?";
+        String sql = "UPDATE plan SET estado = 'INACTIVO' WHERE id = ?";
 
         try (Connection conn = ConexionBD.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {

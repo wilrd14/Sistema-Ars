@@ -23,8 +23,10 @@ public class PlanService {
 
     public Optional<Plan> buscarPorId(String id) throws SQLException {
         if (id == null || id.isBlank()) {
-            throw new IllegalArgumentException("El ID del plan es obligatorio.");
+            throw new IllegalArgumentException(
+                    "El ID del plan es obligatorio.");
         }
+
         return planDAO.buscarPorId(id);
     }
 
@@ -39,57 +41,83 @@ public class PlanService {
 
     public void actualizar(Plan plan) throws SQLException {
         validar(plan);
+
         if (plan.getId() == null) {
-            throw new IllegalArgumentException("El ID del plan es obligatorio.");
+            throw new IllegalArgumentException(
+                    "El ID del plan es obligatorio.");
         }
+
         planDAO.actualizar(plan);
     }
 
     public void eliminar(int id) throws SQLException {
         if (id <= 0) {
-            throw new IllegalArgumentException("El ID debe ser válido.");
+            throw new IllegalArgumentException(
+                    "El ID debe ser válido.");
         }
 
-        boolean tieneCoberturas = coberturaDAO.listarTodo().stream()
-                .anyMatch(c -> c.getPlan_id() != null && c.getPlan_id() == id);
+        Optional<Plan> resultado =
+                planDAO.buscarPorId(String.valueOf(id));
 
-        if (tieneCoberturas) {
+        if (resultado.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "El plan no existe.");
+        }
+
+        if (planDAO.tieneAfiliados(id)) {
             throw new IllegalStateException(
-                    "No se puede eliminar el plan porque tiene coberturas asociadas.");
+                    "No se puede desactivar un plan que tiene afiliados.");
         }
 
         planDAO.eliminar(id);
     }
 
-    public List<Cobertura> consultarCoberturaPorCategoria(String categoria)
-            throws SQLException {
+    public List<Cobertura> consultarCoberturaPorCategoria(
+            String categoria) throws SQLException {
+
         if (categoria == null || categoria.isBlank()) {
-            throw new IllegalArgumentException("La categoría es obligatoria.");
+            throw new IllegalArgumentException(
+                    "La categoría es obligatoria.");
         }
+
+        String categoriaBuscada = categoria.trim();
 
         return coberturaDAO.listarTodo().stream()
                 .filter(c -> c.getCategoria() != null
-                        && c.getCategoria().equalsIgnoreCase(categoria.trim()))
+                        && c.getCategoria().trim().equalsIgnoreCase(
+                                categoriaBuscada))
                 .collect(Collectors.toList());
     }
 
     private void validar(Plan plan) {
         if (plan == null) {
-            throw new IllegalArgumentException("El plan es obligatorio.");
+            throw new IllegalArgumentException(
+                    "El plan es obligatorio.");
         }
-        if (plan.getCodigo() == null || plan.getCodigo().isBlank()) {
-            throw new IllegalArgumentException("El código es obligatorio.");
+
+        if (plan.getCodigo() == null
+                || plan.getCodigo().isBlank()) {
+            throw new IllegalArgumentException(
+                    "El código es obligatorio.");
         }
-        if (plan.getNombre() == null || plan.getNombre().isBlank()) {
-            throw new IllegalArgumentException("El nombre es obligatorio.");
+
+        if (plan.getNombre() == null
+                || plan.getNombre().isBlank()) {
+            throw new IllegalArgumentException(
+                    "El nombre es obligatorio.");
         }
+
         if (plan.getPrima_mensual() == null
                 || plan.getPrima_mensual().signum() < 0) {
             throw new IllegalArgumentException(
                     "La prima mensual no puede ser negativa.");
         }
-        if (plan.getEstado() == null || plan.getEstado().isBlank()) {
-            throw new IllegalArgumentException("El estado es obligatorio.");
+
+        if (plan.getEstado() == null
+                || plan.getEstado().isBlank()) {
+            throw new IllegalArgumentException(
+                    "El estado es obligatorio.");
         }
     }
 }
+
