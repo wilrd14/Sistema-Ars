@@ -27,5 +27,11 @@ public interface AfiliadoDAO {
     
     boolean existeConyugePorTitular(long titularId) throws SQLException;
 
+        Optional<Afiliado> buscarPorId(long id) throws SQLException;
+
+    List<Afiliado> listarDependientes(long titularId) throws SQLException;
+
+    List<Afiliado> buscar(String criterio) throws SQLException;
+
 
 }   

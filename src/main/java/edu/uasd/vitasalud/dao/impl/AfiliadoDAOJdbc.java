@@ -362,6 +362,83 @@ public long registrarAfiliado(Afiliado afiliado) throws SQLException {
     }
 }
 
+    // Busca un afiliado por su id.
+    @Override
+    public Optional<Afiliado> buscarPorId(long id) throws SQLException {
+
+        String sql = "SELECT * FROM afiliado WHERE id = ?";
+
+        try (Connection con = ConexionBD.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setLong(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapear(rs));
+                }
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    // Lista los dependientes de un titular.
+    @Override
+    public List<Afiliado> listarDependientes(long titularId) throws SQLException {
+
+        List<Afiliado> afiliados = new ArrayList<>();
+        String sql = "SELECT * FROM afiliado WHERE titular_id = ? "
+                + "ORDER BY nombres, apellidos";
+
+        try (Connection con = ConexionBD.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setLong(1, titularId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    afiliados.add(mapear(rs));
+                }
+            }
+        }
+
+        return afiliados;
+    }
+
+    // Busca por documento, NSS, número de afiliado o nombre completo.
+    // Con el criterio vacío devuelve todos los afiliados que no son borrador.
+    @Override
+    public List<Afiliado> buscar(String criterio) throws SQLException {
+
+        List<Afiliado> afiliados = new ArrayList<>();
+
+        String sql = "SELECT * FROM afiliado WHERE es_borrador = FALSE AND ("
+                + "numero_documento LIKE ? OR nss LIKE ? "
+                + "OR numero_afiliado LIKE ? "
+                + "OR CONCAT(nombres, ' ', apellidos) LIKE ?) "
+                + "ORDER BY apellidos, nombres";
+
+        try (Connection con = ConexionBD.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            String patron = "%" + (criterio == null ? "" : criterio) + "%";
+
+            ps.setString(1, patron);
+            ps.setString(2, patron);
+            ps.setString(3, patron);
+            ps.setString(4, patron);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    afiliados.add(mapear(rs));
+                }
+            }
+        }
+
+        return afiliados;
+    }
+
     
 /**
  * Convierte una fila de la tabla afiliado en un objeto Afiliado.
