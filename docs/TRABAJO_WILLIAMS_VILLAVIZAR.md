@@ -82,7 +82,7 @@
 
 ## 4. Pendientes y límites conocidos
 - **PDF de reportes (RF-REP-04):** hecho en la actualización del 27/10/2026 (ver sección 5). Pendiente comunicar al grupo la dependencia nueva en el `pom.xml`.
-- `UsuariosController` consulta la BD en el hilo de la interfaz (sin `Task`); el login y el panel sí usan segundo plano.
+- ~~`UsuariosController` consulta la BD en el hilo de la interfaz~~ — resuelto el 27/10/2026 (ver sección 6).
 - El username no se puede cambiar al editar un usuario.
 - No implementado porque no era de Williams: cualquier pantalla o DAO de afiliados, prestadores, planes, autorizaciones y reclamaciones.
 
@@ -140,3 +140,25 @@ y autorizaciones/reclamaciones (módulos de Joel, aún sin servicio).
 - Probar a mano con MySQL real: PDF y CSV, búsqueda global (Ctrl+K) hacia afiliados y prestadores, y filas nuevas en la bitácora.
 - Pruebas unitarias del cableado de bitácora en los tres servicios (hoy solo se comprobó que las existentes siguen pasando).
 - Esperar los módulos de Joel (bandeja, reclamaciones, portal) para que los reportes de reclamaciones, devoluciones y pagos tengan datos.
+
+---
+
+## 6. Actualización del 27/10/2026 (2) — pruebas de bitácora y Usuarios y roles en segundo plano
+
+**Estado:** `.\mvnw.cmd -B test` → 85 pruebas, 0 fallos, BUILD SUCCESS.
+
+### 6.1 Pruebas del cableado de bitácora — RF-SEG-07
+- Nuevo `BitacoraCableadoTest` (17 pruebas, DAO en memoria, sin MySQL):
+  - `registrarDeSesion`: usa al usuario activo; sin sesión guarda usuario nulo; no lanza si la bitácora falla.
+  - AFI: `CREAR` con módulo, tabla, id y usuario; una validación fallida no se audita; el alta se guarda aunque la bitácora falle; sin bitácora inyectada funciona igual.
+  - PSS: `CREAR`, `ACTUALIZAR` y `CAMBIAR_ESTADO` (con el estado en el detalle); un estado inválido no se audita.
+  - PLA: `CREAR`, `ACTUALIZAR` y `ELIMINAR`; un plan con coberturas no se elimina ni se audita.
+- **Hallazgo:** `PlanDAO.registrar` no devuelve el id generado, así que el evento `CREAR` de un plan nuevo queda sin id de registro
+  (`registrarPlanSinIdGuardaRegistroNulo` documenta el comportamiento). Arreglarlo requiere cambiar el DAO de Luis Miguel.
+
+### 6.2 Usuarios y roles sin congelar la ventana
+- `UsuariosController`: todas las consultas y escrituras a MySQL (lista, prestadores, crear/editar, restablecer clave, activar/desactivar, desbloquear)
+  corren en un `Task` mediante el método `enSegundoPlano`. Las confirmaciones y lecturas de campos se hacen antes, en el hilo de la interfaz.
+- Mientras hay consultas en curso se deshabilitan los botones de acción (un contador evita reactivarlos antes de que terminen todas).
+- Los errores del servicio se muestran como antes; un error inesperado se registra en el log y muestra un mensaje genérico.
+- No hay prueba automática (es código de interfaz JavaFX).
