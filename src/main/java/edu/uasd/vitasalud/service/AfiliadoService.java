@@ -14,14 +14,21 @@ import java.util.Optional;
 public class AfiliadoService {
 
     private final AfiliadoDAO afiliadoDAO;
+    /** Opcional (RF-SEG-07): null en pruebas que no quieren auditoría. */
+    private final BitacoraService bitacora;
 
     public AfiliadoService() {
-        this(new AfiliadoDAOJdbc());
+        this(new AfiliadoDAOJdbc(), new BitacoraService());
     }
 
     // Permite probar las reglas con un DAO falso, sin MySQL.
     public AfiliadoService(AfiliadoDAO afiliadoDAO) {
+        this(afiliadoDAO, null);
+    }
+
+    public AfiliadoService(AfiliadoDAO afiliadoDAO, BitacoraService bitacora) {
         this.afiliadoDAO = afiliadoDAO;
+        this.bitacora = bitacora;
     }
 
     public long registrarAfiliado(Afiliado afiliado) throws SQLException {
@@ -48,7 +55,11 @@ public class AfiliadoService {
                     "Ya existe un afiliado con ese NSS.");
         }
 
-        return afiliadoDAO.registrarAfiliado(afiliado);
+        long id = afiliadoDAO.registrarAfiliado(afiliado);
+        if (bitacora != null) {
+            bitacora.registrarDeSesion("AFI", "CREAR", "afiliado", id, "Afiliado registrado");
+        }
+        return id;
     }
 
     // Campos obligatorios y formatos de los datos del afiliado.

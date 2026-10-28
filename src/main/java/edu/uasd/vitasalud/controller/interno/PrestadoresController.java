@@ -1,5 +1,6 @@
 package edu.uasd.vitasalud.controller.interno;
 
+import edu.uasd.vitasalud.app.Navegador;
 import edu.uasd.vitasalud.app.Sesion;
 import edu.uasd.vitasalud.dao.CatalogoDAO;
 import edu.uasd.vitasalud.dao.impl.CatalogoDAOJdbc;
@@ -135,6 +136,8 @@ public class PrestadoresController {
         cmbNuevoEstado.setDisable(!puedeGestionar);
         btnAplicarEstado.setDisable(!puedeGestionar);
 
+        // Búsqueda global (RF-SEG-08): llega con el RNC/cédula ya escrito.
+        Navegador.consumirBusquedaPendiente("prestadores").ifPresent(txtBuscar::setText);
         buscar();
     }
 

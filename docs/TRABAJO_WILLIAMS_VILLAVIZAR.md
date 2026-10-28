@@ -34,7 +34,7 @@
 ### 1.3 Panel y Reportes — RF-REP-01 a 04
 - `dao/ReporteDAO` + `ReporteDAOJdbc` (solo lectura), `service/ReporteService`, modelos `Reporte`, `TablaReporte`, `ResumenPanel`.
 - `PanelController` + `panel.fxml`: 4 tarjetas (Pendientes, En revisión, Aprobadas, Negadas), "Acciones rápidas" (los botones se ocultan si el rol no tiene esa pantalla) y "Requieren tu atención". Carga en segundo plano; si falla la BD muestra ceros y un aviso.
-- `ReportesController` + `reportes.fxml`: una tarjeta por reporte (Autorizaciones por estado con tiempo promedio de respuesta, Reclamaciones por prestador, Devoluciones con reincidencia, Pagos y cheques, Precertificaciones, Actividad de usuarios), filtros Desde/Hasta y exportación a CSV (UTF-8 con BOM, separador `;`).
+- `ReportesController` + `reportes.fxml`: una tarjeta por reporte (Autorizaciones por estado con tiempo promedio de respuesta, Reclamaciones por prestador, Devoluciones con reincidencia, Pagos y cheques, Precertificaciones, Actividad de usuarios), filtros Desde/Hasta y exportación a CSV (UTF-8 con BOM, separador `;`) y a PDF (ver sección 5).
 - Roles por reporte (decisión del desarrollo, **no viene del PRD; confirmar**): Administrador los 6; Analista: autorizaciones y precertificaciones; Auditor: autorizaciones, reclamaciones, devoluciones y pagos; actividad de usuarios solo Administrador.
 - `ReporteServiceTest`: 11 pruebas.
 
@@ -81,7 +81,62 @@
 3. Crear la rama `feature/seg`, hacer commit y abrir PR para que lo revisen Liannelis y Joel (según el README).
 
 ## 4. Pendientes y límites conocidos
-- **PDF de reportes (RF-REP-04):** no hecho; el `pom.xml` no tiene librería de PDF y agregar dependencias requiere acuerdo del grupo. CSV sí está.
+- **PDF de reportes (RF-REP-04):** hecho en la actualización del 27/10/2026 (ver sección 5). Pendiente comunicar al grupo la dependencia nueva en el `pom.xml`.
 - `UsuariosController` consulta la BD en el hilo de la interfaz (sin `Task`); el login y el panel sí usan segundo plano.
 - El username no se puede cambiar al editar un usuario.
 - No implementado porque no era de Williams: cualquier pantalla o DAO de afiliados, prestadores, planes, autorizaciones y reclamaciones.
+
+---
+
+## 5. Actualización del 27/10/2026 — pendientes de SEG + REP tras integrar AFI/PSS
+
+**Estado:** `.\mvnw.cmd -B clean test` → 68 pruebas, 0 fallos, 0 errores, BUILD SUCCESS. Ninguna prueba necesita MySQL.
+**Sin commit todavía:** los cambios están en el árbol de trabajo de `main`.
+
+> **Lo que NO se ha comprobado:** la interfaz JavaFX (botón "Exportar PDF", diálogo de guardado, apertura de pantallas desde el
+> buscador global) ni las consultas contra MySQL real; solo compilación y pruebas unitarias.
+
+### 5.1 Exportación a PDF — RF-REP-04
+- `pom.xml`: nueva dependencia `com.github.librepdf:openpdf` 1.3.43 (propiedad `openpdf.version`).
+- `ReporteService`: `aPdf(tabla, desde, hasta)`, `exportarPdf(tabla, desde, hasta, destino)` y `nombreArchivoPdf(reporte)`.
+  El PDF es A4 horizontal con título "ARS VitaSalud - <reporte>", período, fecha de generación, tabla con cabecera repetida
+  y resumen. Usa Helvetica en CP1252, por lo que tildes y ñ salen bien.
+- `reportes.fxml` y `ReportesController`: botón "Exportar PDF" junto al de CSV, con `FileChooser`. El período del PDF es el de la última generación.
+- `ReporteServiceTest`: de 11 a 15 pruebas (el PDF empieza con `%PDF`, pesa más de 500 bytes con tildes y ñ, caso sin filas ni
+  fechas, escritura a archivo y extensión `.pdf`).
+
+### 5.2 Bitácora en los demás módulos — RF-SEG-07
+Antes solo `UsuarioService` escribía en la bitácora.
+- `BitacoraService.registrarDeSesion(...)`: toma como actor al usuario de la sesión activa.
+- `AfiliadoService`, `PrestadorService` y `PlanService` reciben un `BitacoraService` opcional por constructor. Los constructores
+  anteriores lo dejan en `null`, así que las pruebas de sus dueños no cambiaron. Los constructores por defecto de `AfiliadoService`
+  y `PrestadorService` usan ahora un `BitacoraService` real, y `PlanesController` crea `PlanService` con `new BitacoraService()`.
+- Si la BD falla al registrar, solo se escribe en el log y la operación del usuario no se interrumpe.
+
+| Módulo | Acciones registradas |
+|---|---|
+| AFI | CREAR |
+| PSS | CREAR, ACTUALIZAR, CAMBIAR_ESTADO |
+| PLA | CREAR, ACTUALIZAR, ELIMINAR |
+
+No existe "anulación" de afiliado, prestador ni plan; el equivalente es CAMBIAR_ESTADO / ELIMINAR.
+**Avisar a Liannelis y Luis Miguel** de que sus servicios ahora escriben en la bitácora. Siguen sin registrar: cambio de estado de afiliado
+y autorizaciones/reclamaciones (módulos de Joel, aún sin servicio).
+
+### 5.3 Búsqueda global y consultas — RF-SEG-08
+- Corregido: `AfiliadosController` y `PrestadoresController` no llamaban a `Navegador.consumirBusquedaPendiente`, así que el buscador
+  global abría la pantalla sin el filtro. Se añadieron dos líneas en cada `initialize()` para rellenar `txtBuscar`.
+- `Menu` ya apunta a `interno/NuevoAfiliado.fxml`: no había desajuste de nombre.
+- Las consultas de `BusquedaGlobalDAOJdbc` y `ReporteDAOJdbc` coinciden con tablas y columnas de `01_esquema.sql`.
+- Siguen sin FXML (módulos ajenos): `bandeja_autorizaciones`, `reclamaciones` y todo `prestador/*`. `Navegador` muestra el aviso "en construcción".
+- **Precertificaciones:** no existe tabla propia. El reporte agrupa las autorizaciones con `numero_precertificacion IS NOT NULL` por
+  `estado_precertificacion` ('SIN_ESTADO' si es nulo). Si pasan a tener tabla, hay que reescribir ese reporte.
+
+### 5.4 Archivos modificados
+`pom.xml` · `ReporteService`, `BitacoraService`, `AfiliadoService`, `PrestadorService`, `PlanService` · `ReportesController`, `PlanesController`,
+`AfiliadosController`, `PrestadoresController` · `reportes.fxml` · `ReporteServiceTest`.
+
+### 5.5 Pendiente después de esto
+- Probar a mano con MySQL real: PDF y CSV, búsqueda global (Ctrl+K) hacia afiliados y prestadores, y filas nuevas en la bitácora.
+- Pruebas unitarias del cableado de bitácora en los tres servicios (hoy solo se comprobó que las existentes siguen pasando).
+- Esperar los módulos de Joel (bandeja, reclamaciones, portal) para que los reportes de reclamaciones, devoluciones y pagos tengan datos.

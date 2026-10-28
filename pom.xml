@@ -16,6 +16,7 @@
         <javafx.version>21.0.8</javafx.version>
         <mysql.connector.version>9.4.0</mysql.connector.version>
         <jbcrypt.version>0.4</jbcrypt.version>
+        <openpdf.version>1.3.43</openpdf.version>
         <junit.version>5.11.4</junit.version>
         <app.mainClass>edu.uasd.vitasalud.app.Launcher</app.mainClass>
     </properties>
@@ -40,6 +41,12 @@
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>${jbcrypt.version}</version>
+        </dependency>
+        <!-- Exportación de reportes a PDF (RF-REP-04) -->
+        <dependency>
+            <groupId>com.github.librepdf</groupId>
+            <artifactId>openpdf</artifactId>
+            <version>${openpdf.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

@@ -72,7 +72,9 @@ public class AfiliadosController {
             }
         });
 
-        cargar("");
+        // Búsqueda global (RF-SEG-08): llega con el número de afiliado ya escrito.
+        Navegador.consumirBusquedaPendiente("afiliados").ifPresent(txtBuscar::setText);
+        cargar(txtBuscar.getText() == null ? "" : txtBuscar.getText().trim());
     }
 
     @FXML
