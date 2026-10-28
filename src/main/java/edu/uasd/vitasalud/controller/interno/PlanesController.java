@@ -43,7 +43,7 @@ public class PlanesController {
 
     private final PlanDAO planDAO = new PlanDAOlmpl();
     private final CoberturaDAO coberturaDAO = new CoberturaDAOImpI();
-    private final PlanService planService = new PlanService(planDAO, coberturaDAO);
+    private final PlanService planService = new PlanService(planDAO, coberturaDAO, new edu.uasd.vitasalud.service.BitacoraService());
 
     @FXML
     public void initialize() {

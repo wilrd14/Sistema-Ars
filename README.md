@@ -237,6 +237,10 @@ database/       01_esquema.sql · 02_datos_prueba.sql
 
 - **Williams Villavizar Hernández (SEG + REP)** — 10/10/2026 16:10: ver
   [`docs/TRABAJO_WILLIAMS_VILLAVIZAR.md`](docs/TRABAJO_WILLIAMS_VILLAVIZAR.md) (qué se hizo y cómo integrarlo con los demás módulos).
+- **Williams Villavizar Hernández (SEG + REP)** — 27/10/2026: exportación de reportes a **PDF** (OpenPDF, RF-REP-04); la **bitácora**
+  ahora también registra altas y cambios de afiliados, prestadores y planes (RF-SEG-07); la búsqueda global conserva el filtro al abrir
+  Afiliados y Prestadores (RF-SEG-08). 68 pruebas en verde. Detalle en la sección 5 de
+  [`docs/TRABAJO_WILLIAMS_VILLAVIZAR.md`](docs/TRABAJO_WILLIAMS_VILLAVIZAR.md).
 
 ## 9. Pendiente de la fase 0
 

@@ -13,14 +13,27 @@ import java.util.Optional;
 public class PrestadorService {
 
     private final PrestadorDAO prestadorDAO;
+    /** Opcional (RF-SEG-07): null en pruebas que no quieren auditoría. */
+    private final BitacoraService bitacora;
 
     public PrestadorService() {
-        this(new PrestadorDAOJdbc());
+        this(new PrestadorDAOJdbc(), new BitacoraService());
     }
 
     // Permite probar las reglas con un DAO falso, sin MySQL.
     public PrestadorService(PrestadorDAO prestadorDAO) {
+        this(prestadorDAO, null);
+    }
+
+    public PrestadorService(PrestadorDAO prestadorDAO, BitacoraService bitacora) {
         this.prestadorDAO = prestadorDAO;
+        this.bitacora = bitacora;
+    }
+
+    private void auditar(String accion, Long id, String detalle) {
+        if (bitacora != null) {
+            bitacora.registrarDeSesion("PSS", accion, "prestador", id, detalle);
+        }
     }
 
     public long registrarPrestador(Prestador prestador) throws SQLException {
@@ -40,7 +53,9 @@ public class PrestadorService {
         }
         validarEstado(prestador.getEstadoContrato());
 
-        return prestadorDAO.registrarPrestador(prestador);
+        long id = prestadorDAO.registrarPrestador(prestador);
+        auditar("CREAR", id, "Prestador registrado");
+        return id;
     }
 
     public void actualizarPrestador(Prestador prestador) throws SQLException {
@@ -63,6 +78,7 @@ public class PrestadorService {
         }
 
         prestadorDAO.actualizarPrestador(prestador);
+        auditar("ACTUALIZAR", prestador.getId(), "Datos del prestador actualizados");
     }
 
     public void cambiarEstadoContrato(Long id, String estado) throws SQLException {
@@ -73,6 +89,7 @@ public class PrestadorService {
 
         validarEstado(estado);
         prestadorDAO.cambiarEstadoContrato(id, estado);
+        auditar("CAMBIAR_ESTADO", id, "Estado de contrato: " + estado);
     }
 
     public List<Prestador> listarPrestadores() throws SQLException {

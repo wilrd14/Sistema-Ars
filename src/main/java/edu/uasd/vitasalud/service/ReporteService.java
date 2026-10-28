@@ -1,5 +1,17 @@
 package edu.uasd.vitasalud.service;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import edu.uasd.vitasalud.dao.ReporteDAO;
 import edu.uasd.vitasalud.dao.ReporteDAO.ConteoEstado;
 import edu.uasd.vitasalud.dao.impl.ReporteDAOJdbc;
@@ -10,6 +22,8 @@ import edu.uasd.vitasalud.model.Rol;
 import edu.uasd.vitasalud.model.TablaReporte;
 import edu.uasd.vitasalud.util.Formatos;
 
+import java.awt.Color;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -17,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,7 +41,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** Panel (RF-REP-01), reportes (RF-REP-02/03) y exportación a CSV (RF-REP-04). */
+/** Panel (RF-REP-01), reportes (RF-REP-02/03) y exportación a CSV y PDF (RF-REP-04). */
 public class ReporteService {
 
     public static final char SEPARADOR_CSV = ';';
@@ -268,6 +283,87 @@ public class ReporteService {
     /** Nombre de archivo sugerido, por ejemplo reporte_autorizaciones_2026-10-10.csv */
     public static String nombreArchivo(Reporte reporte) {
         return "reporte_" + reporte.name().toLowerCase() + "_" + LocalDate.now() + ".csv";
+    }
+
+    // ------------------------------------------------------------------ PDF
+
+    /** Nombre de archivo PDF sugerido, por ejemplo reporte_autorizaciones_2026-10-10.pdf */
+    public static String nombreArchivoPdf(Reporte reporte) {
+        return nombreArchivo(reporte).replace(".csv", ".pdf");
+    }
+
+    /**
+     * PDF del reporte: título, rango de fechas, tabla, resumen y fecha de generación.
+     * Usa la fuente Helvetica en codificación CP1252, que cubre tildes y ñ.
+     *
+     * @param desde inicio del rango (null = sin límite)
+     * @param hasta fin del rango (null = sin límite)
+     */
+    public byte[] aPdf(TablaReporte tabla, LocalDate desde, LocalDate hasta) {
+        ByteArrayOutputStream salida = new ByteArrayOutputStream();
+        Document doc = new Document(PageSize.A4.rotate(), 36, 36, 36, 36);
+        try {
+            PdfWriter.getInstance(doc, salida);
+            doc.open();
+            Font titulo = FontFactory.getFont(FontFactory.HELVETICA_BOLD, BaseFont.CP1252, false, 16, Font.NORMAL, new Color(0x1F, 0x3A, 0x5F));
+            Font normal = FontFactory.getFont(FontFactory.HELVETICA, BaseFont.CP1252, false, 9, Font.NORMAL, Color.DARK_GRAY);
+            Font cabecera = FontFactory.getFont(FontFactory.HELVETICA_BOLD, BaseFont.CP1252, false, 9, Font.NORMAL, Color.WHITE);
+
+            doc.add(new Paragraph("ARS VitaSalud - " + tabla.reporte().titulo(), titulo));
+            String rango = "Período: " + (desde == null ? "sin límite" : Formatos.fecha(desde))
+                    + " al " + (hasta == null ? "sin límite" : Formatos.fecha(hasta));
+            doc.add(new Paragraph(rango, normal));
+            doc.add(new Paragraph("Generado el " + LocalDateTime.now().format(FECHA_HORA), normal));
+            doc.add(new Paragraph(" ", normal));
+
+            int columnas = Math.max(1, tabla.columnas().size());
+            PdfPTable t = new PdfPTable(columnas);
+            t.setWidthPercentage(100);
+            t.setHeaderRows(1);
+            for (String c : tabla.columnas()) {
+                PdfPCell celda = new PdfPCell(new Phrase(c == null ? "" : c, cabecera));
+                celda.setBackgroundColor(new Color(0x1F, 0x3A, 0x5F));
+                celda.setPadding(4);
+                t.addCell(celda);
+            }
+            if (tabla.filas().isEmpty()) {
+                PdfPCell vacia = new PdfPCell(new Phrase("Sin datos para el período seleccionado.", normal));
+                vacia.setColspan(columnas);
+                vacia.setPadding(6);
+                t.addCell(vacia);
+            }
+            for (List<String> fila : tabla.filas()) {
+                for (int i = 0; i < columnas; i++) {
+                    String valor = i < fila.size() && fila.get(i) != null ? fila.get(i) : "";
+                    PdfPCell celda = new PdfPCell(new Phrase(valor, normal));
+                    celda.setPadding(4);
+                    celda.setHorizontalAlignment(Element.ALIGN_LEFT);
+                    t.addCell(celda);
+                }
+            }
+            doc.add(t);
+            if (tabla.resumen() != null && !tabla.resumen().isBlank()) {
+                Paragraph resumen = new Paragraph(tabla.resumen(), normal);
+                resumen.setSpacingBefore(10);
+                doc.add(resumen);
+            }
+        } catch (DocumentException e) {
+            throw new ServicioException("No se pudo generar el PDF del reporte.", e);
+        } finally {
+            if (doc.isOpen()) {
+                doc.close();
+            }
+        }
+        return salida.toByteArray();
+    }
+
+    public void exportarPdf(TablaReporte tabla, LocalDate desde, LocalDate hasta, Path destino) {
+        byte[] pdf = aPdf(tabla, desde, hasta);
+        try {
+            Files.write(destino, pdf);
+        } catch (IOException e) {
+            throw new ServicioException("No se pudo guardar el archivo. Verifica que la ruta exista y no esté en uso.", e);
+        }
     }
 
     private static void agregarFila(StringBuilder sb, List<String> celdas) {
