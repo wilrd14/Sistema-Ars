@@ -239,13 +239,14 @@ database/       01_esquema.sql · 02_datos_prueba.sql
   [`docs/TRABAJO_WILLIAMS_VILLAVIZAR.md`](docs/TRABAJO_WILLIAMS_VILLAVIZAR.md) (qué se hizo y cómo integrarlo con los demás módulos).
 - **Williams Villavizar Hernández (SEG + REP)** — 27/10/2026: exportación de reportes a **PDF** (OpenPDF, RF-REP-04); la **bitácora**
   ahora también registra altas y cambios de afiliados, prestadores y planes (RF-SEG-07); la búsqueda global conserva el filtro al abrir
-  Afiliados y Prestadores (RF-SEG-08). 68 pruebas en verde. Detalle en la sección 5 de
+  Afiliados y Prestadores (RF-SEG-08); 17 pruebas nuevas de bitácora (`BitacoraCableadoTest`); y **Usuarios y roles** ya no consulta MySQL en el hilo
+  de la interfaz (usa `Task` en segundo plano). 85 pruebas en verde. Detalle en la sección 5 de
   [`docs/TRABAJO_WILLIAMS_VILLAVIZAR.md`](docs/TRABAJO_WILLIAMS_VILLAVIZAR.md).
 
 ## 9. Pendiente de la fase 0
 
-- [ ] Agregar la fuente **Figtree** (`Figtree-Regular/Medium/SemiBold/Bold.ttf`, licencia OFL) en `src/main/resources/fonts/`.
+- [x] Agregar la fuente **Figtree** (`Figtree-Regular/Medium/SemiBold/Bold.ttf`, licencia OFL) en `src/main/resources/fonts/`.
       Sin ella la app usa Segoe UI.
-- [ ] Logo en `src/main/resources/img/logo-vitasalud.png` (hoy se usa una "V" provisional en `.logo-mark`).
-- [ ] Búsqueda global del encabezado (RF-SEG-08, P1) y bitácora (RF-SEG-07, P1).
+- [x] Logo en `src/main/resources/img/logo-vitasalud.png` (hoy se usa una "V" provisional en `.logo-mark`).
+- [x] Búsqueda global del encabezado (RF-SEG-08, P1) y bitácora (RF-SEG-07, P1).
 - [ ] Acordar entre los cuatro el esquema `01_esquema.sql`.

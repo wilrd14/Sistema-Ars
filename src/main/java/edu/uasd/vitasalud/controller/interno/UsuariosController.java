@@ -11,6 +11,7 @@ import edu.uasd.vitasalud.util.Alertas;
 import edu.uasd.vitasalud.util.Chips;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -26,6 +27,8 @@ import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -64,6 +67,8 @@ public class UsuariosController {
     private final UsuarioService service = new UsuarioService();
     /** Usuario en edición; null = formulario de alta. */
     private Usuario seleccionado;
+    /** Consultas a la BD en curso (siempre se toca desde el hilo de la interfaz). */
+    private int tareasActivas;
 
     @FXML
     private void initialize() {
@@ -83,11 +88,9 @@ public class UsuariosController {
         });
         cmbRol.getSelectionModel().selectedItemProperty().addListener((obs, anterior, nuevo) -> alCambiarRol(nuevo));
 
-        try {
-            cmbPrestador.setItems(FXCollections.observableArrayList(service.listarPrestadores()));
-        } catch (ServicioException e) {
-            mostrarError(e.getMessage());
-        }
+        enSegundoPlano(service::listarPrestadores,
+                prestadores -> cmbPrestador.setItems(FXCollections.observableArrayList(prestadores)),
+                this::mostrarError);
 
         tabla.getSelectionModel().selectedItemProperty().addListener((obs, anterior, nuevo) -> {
             if (nuevo != null) {
@@ -169,14 +172,10 @@ public class UsuariosController {
 
     @FXML
     private void buscar() {
-        try {
-            List<Usuario> usuarios = service.listar(txtFiltro.getText());
-            tabla.setItems(FXCollections.observableArrayList(usuarios));
-        } catch (ServicioException e) {
-            Alertas.error("Usuarios", e.getMessage());
-        } catch (RuntimeException e) {
-            falloInesperado(e);
-        }
+        String filtro = txtFiltro.getText();
+        enSegundoPlano(() -> service.listar(filtro),
+                usuarios -> tabla.setItems(FXCollections.observableArrayList(usuarios)),
+                mensaje -> Alertas.error("Usuarios", mensaje));
     }
 
     // ------------------------------------------------------------------ formulario
@@ -253,22 +252,28 @@ public class UsuariosController {
         PrestadorOpcion prestador = cmbPrestador.getValue();
         Long prestadorId = rol != null && rol.perfil() == edu.uasd.vitasalud.model.Perfil.PRESTADOR && prestador != null
                 ? prestador.id() : null;
-        try {
-            if (seleccionado == null) {
-                service.crear(txtNombre.getText(), txtUsername.getText(), txtClave.getText(), rol,
-                        txtCargo.getText(), prestadorId);
-                Alertas.info("Usuario creado", "El usuario " + txtUsername.getText().trim() + " ya puede iniciar sesión.");
+        // Los campos se leen aquí (hilo de la interfaz); la escritura en la BD va en segundo plano.
+        Usuario editado = seleccionado;
+        String nombre = txtNombre.getText();
+        String username = txtUsername.getText();
+        String clave = txtClave.getText();
+        String cargo = txtCargo.getText();
+        enSegundoPlano(() -> {
+            if (editado == null) {
+                service.crear(nombre, username, clave, rol, cargo, prestadorId);
             } else {
-                service.editar(seleccionado.getId(), txtNombre.getText(), rol, txtCargo.getText(), prestadorId);
-                Alertas.info("Usuario actualizado", "Los datos de " + seleccionado.getUsername() + " se guardaron.");
+                service.editar(editado.getId(), nombre, rol, cargo, prestadorId);
+            }
+            return null;
+        }, ignorado -> {
+            if (editado == null) {
+                Alertas.info("Usuario creado", "El usuario " + username.trim() + " ya puede iniciar sesión.");
+            } else {
+                Alertas.info("Usuario actualizado", "Los datos de " + editado.getUsername() + " se guardaron.");
             }
             nuevo();
             buscar();
-        } catch (ServicioException e) {
-            mostrarError(e.getMessage());
-        } catch (RuntimeException e) {
-            falloInesperado(e);
-        }
+        }, this::mostrarError);
     }
 
     @FXML
@@ -277,24 +282,24 @@ public class UsuariosController {
             return;
         }
         ocultarError();
-        try {
-            // La validación de la clave es del servicio; aquí solo se confirma la acción.
-            if (txtClave.getText().isEmpty()) {
-                mostrarError("Escribe la nueva contraseña en el campo de arriba y vuelve a pulsar el botón.");
-                return;
-            }
-            if (!Alertas.confirmar("Restablecer contraseña",
-                    "Se cambiará la contraseña de " + seleccionado.getUsername() + ". ¿Continuar?")) {
-                return;
-            }
-            service.restablecerClave(seleccionado.getId(), txtClave.getText());
-            txtClave.clear();
-            Alertas.info("Contraseña restablecida", "Comunica la nueva contraseña a " + seleccionado.getNombre() + ".");
-        } catch (ServicioException e) {
-            mostrarError(e.getMessage());
-        } catch (RuntimeException e) {
-            falloInesperado(e);
+        // La validación de la clave es del servicio; aquí solo se confirma la acción.
+        if (txtClave.getText().isEmpty()) {
+            mostrarError("Escribe la nueva contraseña en el campo de arriba y vuelve a pulsar el botón.");
+            return;
         }
+        if (!Alertas.confirmar("Restablecer contraseña",
+                "Se cambiará la contraseña de " + seleccionado.getUsername() + ". ¿Continuar?")) {
+            return;
+        }
+        Usuario objetivo = seleccionado;
+        String clave = txtClave.getText();
+        enSegundoPlano(() -> {
+            service.restablecerClave(objetivo.getId(), clave);
+            return null;
+        }, ignorado -> {
+            txtClave.clear();
+            Alertas.info("Contraseña restablecida", "Comunica la nueva contraseña a " + objetivo.getNombre() + ".");
+        }, this::mostrarError);
     }
 
     @FXML
@@ -302,19 +307,18 @@ public class UsuariosController {
         if (seleccionado == null) {
             return;
         }
-        try {
-            if (!Alertas.confirmar("Desbloquear cuenta",
-                    "Se reactivará la cuenta de " + seleccionado.getUsername() + " y se reiniciarán sus intentos fallidos.")) {
-                return;
-            }
-            service.desbloquear(seleccionado.getId());
+        if (!Alertas.confirmar("Desbloquear cuenta",
+                "Se reactivará la cuenta de " + seleccionado.getUsername() + " y se reiniciarán sus intentos fallidos.")) {
+            return;
+        }
+        long id = seleccionado.getId();
+        enSegundoPlano(() -> {
+            service.desbloquear(id);
+            return null;
+        }, ignorado -> {
             nuevo();
             buscar();
-        } catch (ServicioException e) {
-            mostrarError(e.getMessage());
-        } catch (RuntimeException e) {
-            falloInesperado(e);
-        }
+        }, this::mostrarError);
     }
 
     @FXML
@@ -323,31 +327,66 @@ public class UsuariosController {
             return;
         }
         boolean activar = Usuario.ESTADO_INACTIVO.equals(seleccionado.getEstado());
-        try {
-            if (seleccionado.getId() == Sesion.getUsuario().getId() && !activar) {
-                mostrarError("No puedes desactivar tu propia cuenta.");
-                return;
-            }
-            String mensaje = activar
-                    ? "Se reactivará la cuenta de " + seleccionado.getUsername() + "."
-                    : "La cuenta de " + seleccionado.getUsername()
-                    + " dejará de poder iniciar sesión. Sus registros se conservan y podrás activarla de nuevo.";
-            if (!Alertas.confirmar(activar ? "Activar usuario" : "Desactivar usuario", mensaje)) {
-                return;
-            }
-            service.cambiarEstado(seleccionado.getId(), activar);
+        if (seleccionado.getId() == Sesion.getUsuario().getId() && !activar) {
+            mostrarError("No puedes desactivar tu propia cuenta.");
+            return;
+        }
+        String mensaje = activar
+                ? "Se reactivará la cuenta de " + seleccionado.getUsername() + "."
+                : "La cuenta de " + seleccionado.getUsername()
+                + " dejará de poder iniciar sesión. Sus registros se conservan y podrás activarla de nuevo.";
+        if (!Alertas.confirmar(activar ? "Activar usuario" : "Desactivar usuario", mensaje)) {
+            return;
+        }
+        long id = seleccionado.getId();
+        enSegundoPlano(() -> {
+            service.cambiarEstado(id, activar);
+            return null;
+        }, ignorado -> {
             nuevo();
             buscar();
-        } catch (ServicioException e) {
-            mostrarError(e.getMessage());
-        } catch (RuntimeException e) {
-            falloInesperado(e);
-        }
+        }, this::mostrarError);
     }
 
-    private void falloInesperado(RuntimeException e) {
-        LOG.log(Level.SEVERE, "Error inesperado en usuarios", e);
-        mostrarError("Ocurrió un error inesperado. Revisa el archivo de log.");
+    /**
+     * Ejecuta el acceso a MySQL fuera del hilo de la interfaz para no congelar la ventana si el servidor tarda.
+     * Mientras corre se deshabilitan los botones de acción; {@code alExito} y {@code alError} se ejecutan de
+     * vuelta en el hilo de la interfaz. Los errores del servicio llegan a {@code alError} con su mensaje.
+     */
+    private <T> void enSegundoPlano(Supplier<T> trabajo, Consumer<T> alExito, Consumer<String> alError) {
+        Task<T> tarea = new Task<>() {
+            @Override
+            protected T call() {
+                return trabajo.get();
+            }
+        };
+        tarea.setOnRunning(e -> bloquearAcciones(true));
+        tarea.setOnSucceeded(e -> {
+            bloquearAcciones(false);
+            alExito.accept(tarea.getValue());
+        });
+        tarea.setOnFailed(e -> {
+            bloquearAcciones(false);
+            Throwable causa = tarea.getException();
+            if (causa instanceof ServicioException) {
+                alError.accept(causa.getMessage());
+            } else {
+                LOG.log(Level.SEVERE, "Error inesperado en usuarios", causa);
+                alError.accept("Ocurrió un error inesperado. Revisa el archivo de log.");
+            }
+        });
+        Thread hilo = new Thread(tarea, "usuarios");
+        hilo.setDaemon(true);
+        hilo.start();
+    }
+
+    /** Los botones se reactivan solo cuando termina la última consulta en curso. */
+    private void bloquearAcciones(boolean bloquear) {
+        tareasActivas += bloquear ? 1 : -1;
+        boolean ocupado = tareasActivas > 0;
+        for (Button b : List.of(btnGuardar, btnClave, btnEstado, btnDesbloquear)) {
+            b.setDisable(ocupado);
+        }
     }
 
     private void mostrarError(String mensaje) {
