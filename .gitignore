@@ -19,3 +19,9 @@ db.properties
 .DS_Store
 Thumbs.db
 
+
+# Logs
+logs/
+
+# Docker (variables locales opcionales)
+.env

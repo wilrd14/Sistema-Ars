@@ -158,3 +158,21 @@
     -fx-background-color: #DDF1E5; -fx-border-color: #9FD3B5; -fx-border-radius: 10;
     -fx-background-radius: 10; -fx-padding: 12 16;
 }
+
+/* ---------- Búsqueda global (encabezado de la Consola interna, RF-SEG-08) ---------- */
+.buscador { -fx-pref-width: 340; -fx-max-width: 340; }
+.busqueda-popup {
+    -fx-background-color: white; -fx-background-radius: 10; -fx-border-color: -vita-borde; -fx-border-radius: 10;
+    -fx-padding: 6; -fx-pref-width: 340; -fx-effect: dropshadow(gaussian, rgba(21, 35, 45, 0.18), 12, 0, 0, 4);
+}
+.busqueda-grupo { -fx-text-fill: -vita-texto-3; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 8 8 2 8; }
+.busqueda-item { -fx-background-radius: 8; -fx-padding: 6 8; -fx-cursor: hand; }
+.busqueda-item:hover { -fx-background-color: -vita-menta; }
+.busqueda-item-titulo { -fx-font-weight: 600; }
+.busqueda-vacio { -fx-text-fill: -vita-texto-3; -fx-padding: 8; }
+
+/* ---- Panel y Reportes ---- */
+.aviso-panel {
+    -fx-background-color: #FDF0D5; -fx-border-color: -vita-ambar; -fx-border-radius: 10;
+    -fx-background-radius: 10; -fx-padding: 12 16; -fx-text-fill: #6B4200;
+}

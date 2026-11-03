@@ -2,6 +2,7 @@ package edu.uasd.vitasalud.controller.comun;
 
 import edu.uasd.vitasalud.app.Navegador;
 import edu.uasd.vitasalud.app.Sesion;
+import edu.uasd.vitasalud.config.AppConfig;
 import edu.uasd.vitasalud.model.Perfil;
 import edu.uasd.vitasalud.model.Usuario;
 import edu.uasd.vitasalud.service.ServicioException;
@@ -17,8 +18,13 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /** Inicio de sesión con selector de perfil Prestador / Personal interno (RF-SEG-01). */
 public class LoginController {
+
+    private static final Logger LOG = Logger.getLogger(LoginController.class.getName());
 
     @FXML private ToggleGroup grupoPerfil;
     @FXML private ToggleButton tglPrestador;
@@ -71,9 +77,16 @@ public class LoginController {
         tarea.setOnFailed(e -> {
             btnAcceder.setDisable(false);
             Throwable causa = tarea.getException();
-            mostrarError(causa instanceof ServicioException
-                    ? causa.getMessage()
-                    : "Ocurrió un error inesperado. Revisa el archivo de log.");
+            if (causa instanceof ServicioException) {
+                mostrarError(causa.getMessage());
+            } else if (causa instanceof IllegalStateException) {
+                // Configuración ausente (db.properties): el mensaje ya explica cómo corregirlo.
+                LOG.log(Level.SEVERE, "Configuración inválida", causa);
+                mostrarError(causa.getMessage());
+            } else {
+                LOG.log(Level.SEVERE, "Error inesperado al iniciar sesión", causa);
+                mostrarError("Ocurrió un error inesperado. Revisa el archivo logs/vitasalud.log.");
+            }
         });
         Thread hilo = new Thread(tarea, "login");
         hilo.setDaemon(true);
@@ -82,8 +95,23 @@ public class LoginController {
 
     @FXML
     private void mostrarAyuda() {
+        // Si db.properties no se puede leer, se muestran los datos por defecto en vez de fallar.
+        String nombre = "Administrador de ARS VitaSalud";
+        String correo = "soporte@vitasalud.example";
+        String telefono = "809-555-0100";
+        String horario = "Lunes a viernes, 8:00 a.m. - 5:00 p.m.";
+        try {
+            nombre = AppConfig.get("ayuda.contacto.nombre", nombre);
+            correo = AppConfig.get("ayuda.contacto.correo", correo);
+            telefono = AppConfig.get("ayuda.contacto.telefono", telefono);
+            horario = AppConfig.get("ayuda.contacto.horario", horario);
+        } catch (IllegalStateException ignorada) {
+            // Sin db.properties se usan los valores por defecto.
+        }
         Alertas.info("¿Necesitas ayuda para acceder?",
-                "Comunícate con el administrador de ARS VitaSalud para recuperar o desbloquear tu acceso.");
+                "Si olvidaste tu contraseña o tu cuenta fue bloqueada, solicita al administrador que la restablezca "
+                        + "o la desbloquee.\n\n"
+                        + nombre + "\nCorreo: " + correo + "\nTeléfono: " + telefono + "\nHorario: " + horario);
     }
 
     private Perfil perfilElegido() {

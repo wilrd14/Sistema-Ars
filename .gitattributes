@@ -2,3 +2,5 @@
 mvnw text eol=lf
 *.cmd text eol=crlf
 *.docx binary
+*.sh text eol=lf
+Dockerfile text eol=lf

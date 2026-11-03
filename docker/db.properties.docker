@@ -1,0 +1,10 @@
+# Conexión usada DENTRO de Docker (se copia a la imagen; no necesitas db.properties local).
+# "db" es el nombre del servicio MySQL en docker-compose.yml.
+db.url=jdbc:mysql://db:3306/vitasalud?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Santo_Domingo&connectTimeout=5000
+db.user=root
+db.password=vitasalud
+
+ayuda.contacto.nombre=Administrador de ARS VitaSalud
+ayuda.contacto.correo=soporte@vitasalud.example
+ayuda.contacto.telefono=809-555-0100
+ayuda.contacto.horario=Lunes a viernes, 8:00 a.m. - 5:00 p.m.

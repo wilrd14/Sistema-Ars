@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Panel de la Consola interna (RF-REP-01). Solo clases de vitasalud.css. -->
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="edu.uasd.vitasalud.controller.interno.PanelController" spacing="20">
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Label styleClass="section-title" text="Autorizaciones por estado"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="lblCargando" styleClass="texto-secundario" text="Actualizando..." visible="false"/>
+        <Button fx:id="btnRefrescar" styleClass="btn-ghost" text="Actualizar" onAction="#refrescar"/>
+    </HBox>
+
+    <Label fx:id="lblAviso" styleClass="aviso-panel" wrapText="true" visible="false" managed="false"/>
+
+    <HBox spacing="16">
+        <VBox styleClass="card" spacing="4" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+            <Label styleClass="texto-secundario" text="Pendientes"/>
+            <Label fx:id="kpiPendientes" styleClass="kpi-value" text="0"/>
+        </VBox>
+        <VBox styleClass="card" spacing="4" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+            <Label styleClass="texto-secundario" text="En revisión"/>
+            <Label fx:id="kpiRevision" styleClass="kpi-value" text="0"/>
+        </VBox>
+        <VBox styleClass="card" spacing="4" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+            <Label styleClass="texto-secundario" text="Aprobadas"/>
+            <Label fx:id="kpiAprobadas" styleClass="kpi-value" text="0"/>
+        </VBox>
+        <VBox styleClass="card" spacing="4" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+            <Label styleClass="texto-secundario" text="Negadas"/>
+            <Label fx:id="kpiNegadas" styleClass="kpi-value" text="0"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="16">
+        <VBox styleClass="card" spacing="12" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+            <Label styleClass="section-title" text="Acciones rápidas"/>
+            <HBox spacing="12">
+                <Button fx:id="btnNuevoAfiliado" styleClass="btn" text="Nuevo afiliado" onAction="#nuevoAfiliado"/>
+                <Button fx:id="btnAbrirBandeja" styleClass="btn" text="Abrir bandeja" onAction="#abrirBandeja"/>
+            </HBox>
+        </VBox>
+        <VBox styleClass="card" spacing="12" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+            <Label styleClass="section-title" text="Requieren tu atención"/>
+            <VBox fx:id="listaAtencion" spacing="8"/>
+        </VBox>
+    </HBox>
+</VBox>

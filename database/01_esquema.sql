@@ -120,6 +120,7 @@ CREATE TABLE usuario (
 CREATE TABLE bitacora (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
     usuario_id  BIGINT,
+    perfil      VARCHAR(10),                  -- INTERNO, PRESTADOR (perfil del usuario al actuar)
     fecha_hora  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modulo      VARCHAR(30)  NOT NULL,
     accion      VARCHAR(60)  NOT NULL,

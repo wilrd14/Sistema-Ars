@@ -15,6 +15,8 @@ public class Usuario {
     private Rol rol;
     /** Obligatorio cuando el perfil es PRESTADOR; null para personal interno. */
     private Long prestadorId;
+    /** Solo lectura: nombre del prestador, lo llena el listado de usuarios. */
+    private String prestadorNombre;
     private String cargo;
     private String estado;
     private int intentosFallidos;
@@ -73,6 +75,14 @@ public class Usuario {
 
     public void setPrestadorId(Long prestadorId) {
         this.prestadorId = prestadorId;
+    }
+
+    public String getPrestadorNombre() {
+        return prestadorNombre;
+    }
+
+    public void setPrestadorNombre(String prestadorNombre) {
+        this.prestadorNombre = prestadorNombre;
     }
 
     public String getCargo() {

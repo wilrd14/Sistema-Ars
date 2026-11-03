@@ -30,6 +30,12 @@ public final class AppConfig {
         return valor;
     }
 
+    /** Como {@link #get(String)}, pero devuelve {@code porDefecto} si la propiedad no existe. */
+    public static synchronized String get(String clave, String porDefecto) {
+        cargar();
+        return propiedades.getProperty(clave, porDefecto);
+    }
+
     private static void cargar() {
         if (propiedades != null) {
             return;
