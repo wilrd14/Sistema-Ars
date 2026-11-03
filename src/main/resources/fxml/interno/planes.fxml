@@ -3,64 +3,158 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="edu.uasd.vitasalud.controller.interno.PlanesController"
-      spacing="16"
-      fillWidth="true">
+<ScrollPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fitToWidth="true"
+            fitToHeight="false"
+            hbarPolicy="AS_NEEDED"
+            vbarPolicy="AS_NEEDED"
+            pannable="true"
+            fx:controller="edu.uasd.vitasalud.controller.interno.PlanesController">
 
-    <padding>
-        <Insets top="24" right="24" bottom="24" left="24"/>
-    </padding>
+    <content>
+        <VBox spacing="16" fillWidth="true">
+            <padding>
+                <Insets top="24" right="24" bottom="24" left="24"/>
+            </padding>
 
-    <Label text="Planes y coberturas" styleClass="section-title"/>
-    <Label text="Consulta los planes médicos y las coberturas disponibles."
-           styleClass="texto-secundario"/>
+            <Label text="Planes y coberturas" styleClass="section-title"/>
 
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Label text="Filtrar por categoría:"/>
-        <ComboBox fx:id="filtroCategoria"
-                  promptText="Todas las categorías"
-                  prefWidth="240"/>
-        <Button text="Filtrar" onAction="#filtrarCoberturas"/>
-        <Button text="Limpiar" onAction="#limpiarFiltro"/>
-        <Button text="Actualizar" onAction="#cargarDatos"/>
-    </HBox>
+            <Label text="Consulta los planes médicos y las coberturas disponibles."
+                   styleClass="texto-secundario"
+                   wrapText="true"/>
 
-    <Label text="Planes médicos" styleClass="section-title"/>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Filtrar por categoría:"/>
 
-    <TableView fx:id="tablaPlanes" prefHeight="220">
-        <columns>
-            <TableColumn fx:id="colId" text="ID" prefWidth="55"/>
-            <TableColumn fx:id="colCodigo" text="Código" prefWidth="100"/>
-            <TableColumn fx:id="colNombre" text="Nombre del plan" prefWidth="180"/>
-            <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="280"/>
-            <TableColumn fx:id="colPrima" text="Prima mensual" prefWidth="120"/>
-            <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
-        </columns>
-    </TableView>
+                <ComboBox fx:id="filtroCategoria"
+                          promptText="Todas las categorías"
+                          prefWidth="240"
+                          maxWidth="300"/>
 
-    <Label text="Coberturas" styleClass="section-title"/>
+                <Button text="Filtrar" onAction="#filtrarCoberturas"/>
+                <Button text="Limpiar" onAction="#limpiarFiltro"/>
+                <Button text="Actualizar" onAction="#cargarDatos"/>
+            </HBox>
 
-    <TableView fx:id="tablaCoberturas" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn fx:id="colCoberturaId" text="ID" prefWidth="55"/>
-            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="150"/>
-            <TableColumn fx:id="colPorcentaje" text="Cobertura (%)" prefWidth="110"/>
-            <TableColumn fx:id="colCopago" text="Copago fijo" prefWidth="110"/>
-            <TableColumn fx:id="colTope" text="Tope anual" prefWidth="120"/>
-            <TableColumn fx:id="colCarencia" text="Días de carencia" prefWidth="120"/>
-            <TableColumn fx:id="colPrecertificacion" text="Precertificación" prefWidth="140"/>
-        </columns>
-    </TableView>
+            <Label text="Planes médicos" styleClass="section-title"/>
 
-    <Label fx:id="mensaje"
-           text="Listo para cargar los datos."
-           styleClass="texto-secundario"/>
+            <TableView fx:id="tablaPlanes"
+                       prefHeight="220"
+                       minHeight="180"
+                       VBox.vgrow="NEVER">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="55"/>
+                    <TableColumn fx:id="colCodigo" text="Código" prefWidth="100"/>
+                    <TableColumn fx:id="colNombre" text="Nombre del plan" prefWidth="180"/>
+                    <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="280"/>
+                    <TableColumn fx:id="colPrima" text="Prima mensual" prefWidth="120"/>
+                    <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
+                </columns>
+            </TableView>
 
-</VBox>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button text="Registrar plan" onAction="#registrarPlan"/>
+                <Button text="Actualizar plan" onAction="#actualizarPlan"/>
+                <Button text="Eliminar plan" onAction="#eliminarPlan"/>
+            </HBox>
+
+            <Label text="Coberturas" styleClass="section-title"/>
+
+            <TableView fx:id="tablaCoberturas"
+                       prefHeight="220"
+                       minHeight="180"
+                       VBox.vgrow="NEVER">
+                <columns>
+                    <TableColumn fx:id="colCoberturaId" text="ID" prefWidth="55"/>
+                    <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="150"/>
+                    <TableColumn fx:id="colPorcentaje" text="Cobertura (%)" prefWidth="110"/>
+                    <TableColumn fx:id="colCopago" text="Copago fijo" prefWidth="110"/>
+                    <TableColumn fx:id="colTope" text="Tope anual" prefWidth="120"/>
+                    <TableColumn fx:id="colCarencia" text="Días de carencia" prefWidth="120"/>
+                    <TableColumn fx:id="colPrecertificacion" text="Precertificación" prefWidth="140"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button text="Registrar cobertura" onAction="#registrarCobertura"/>
+                <Button text="Actualizar cobertura" onAction="#actualizarCobertura"/>
+                <Button text="Eliminar cobertura" onAction="#eliminarCobertura"/>
+            </HBox>
+
+            <Label text="Procedimientos médicos" styleClass="section-title"/>
+
+            <TableView fx:id="tablaProcedimientos"
+                       prefHeight="220"
+                       minHeight="180"
+                       VBox.vgrow="NEVER">
+                <columns>
+                    <TableColumn fx:id="colProcedimientoId" text="ID" prefWidth="65"/>
+                    <TableColumn fx:id="colProcedimientoCodigo" text="Código" prefWidth="120"/>
+                    <TableColumn fx:id="colProcedimientoDescripcion" text="Descripción" prefWidth="280"/>
+                    <TableColumn fx:id="colProcedimientoCategoria" text="Categoría" prefWidth="150"/>
+                    <TableColumn fx:id="colPrecioReferencia" text="Precio de referencia" prefWidth="160"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button text="Registrar procedimiento" onAction="#registrarProcedimiento"/>
+                <Button text="Actualizar procedimiento" onAction="#actualizarProcedimiento"/>
+                <Button text="Eliminar procedimiento" onAction="#eliminarProcedimiento"/>
+            </HBox>
+
+            <Label text="Tarifas de prestadores" styleClass="section-title"/>
+
+            <TableView fx:id="tablaTarifas"
+                       prefHeight="180"
+                       minHeight="160"
+                       VBox.vgrow="NEVER">
+                <columns>
+                    <TableColumn fx:id="colTarifaId" text="ID" prefWidth="70"/>
+                    <TableColumn fx:id="colTarifaPrestadorId" text="ID del prestador" prefWidth="180"/>
+                    <TableColumn fx:id="colTarifaProcedimientoId" text="ID del procedimiento" prefWidth="200"/>
+                    <TableColumn fx:id="colTarifaMonto" text="Monto" prefWidth="150"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button text="Registrar tarifa" onAction="#registrarTarifa"/>
+                <Button text="Actualizar tarifa" onAction="#actualizarTarifa"/>
+                <Button text="Eliminar tarifa" onAction="#eliminarTarifa"/>
+            </HBox>
+
+            <Label text="Comunicados" styleClass="section-title"/>
+
+            <TableView fx:id="tablaComunicados"
+                       prefHeight="220"
+                       minHeight="180"
+                       VBox.vgrow="NEVER">
+                <columns>
+                    <TableColumn fx:id="colComunicadoId" text="ID" prefWidth="55"/>
+                    <TableColumn fx:id="colComunicadoTitulo" text="Título" prefWidth="180"/>
+                    <TableColumn fx:id="colComunicadoMensaje" text="Mensaje" prefWidth="300"/>
+                    <TableColumn fx:id="colComunicadoFecha" text="Fecha de publicación" prefWidth="190"/>
+                    <TableColumn fx:id="colComunicadoVigente" text="Vigente" prefWidth="100"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button text="Registrar comunicado" onAction="#registrarComunicado"/>
+                <Button text="Actualizar comunicado" onAction="#actualizarComunicado"/>
+                <Button text="Eliminar comunicado" onAction="#eliminarComunicado"/>
+            </HBox>
+
+            <Label fx:id="mensaje"
+                   text="Listo para cargar los datos."
+                   styleClass="texto-secundario"
+                   wrapText="true"/>
+        </VBox>
+    </content>
+</ScrollPane>
+
