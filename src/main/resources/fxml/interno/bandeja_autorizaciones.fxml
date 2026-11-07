@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<!-- AUT: bandeja de revisión en dos columnas (lista + panel de detalles). -->
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="edu.uasd.vitasalud.controller.interno.BandejaController" spacing="10">
+ <HBox spacing="12" alignment="CENTER_LEFT">
+  <Label text="Bandeja AUT" styleClass="section-title"/><ComboBox fx:id="cbEstado"/>
+  <Button text="Actualizar" styleClass="btn-ghost" onAction="#recargar"/>
+  <Button text="Aplicar vencimientos (30 días)" styleClass="btn-ghost" onAction="#vencer"/>
+ </HBox>
+ <HBox spacing="14" VBox.vgrow="ALWAYS">
+  <TableView fx:id="tabla" prefWidth="690" HBox.hgrow="ALWAYS">
+   <columns>
+    <TableColumn fx:id="colNumero" text="Autorización" prefWidth="120"/>
+    <TableColumn fx:id="colFecha" text="Fecha" prefWidth="145"/>
+    <TableColumn fx:id="colAfiliado" text="Asegurado" prefWidth="165"/>
+    <TableColumn fx:id="colPrestador" text="Prestador" prefWidth="160"/>
+    <TableColumn fx:id="colEstado" text="Estado" prefWidth="130"/>
+   </columns>
+  </TableView>
+  <ScrollPane fitToWidth="true" prefWidth="385">
+   <VBox spacing="10" styleClass="card">
+    <Label text="Revisión de autorización" styleClass="section-title"/>
+    <Label fx:id="lblDetalle" text="Seleccione una autorización" wrapText="true"/>
+    <Label fx:id="lblCobertura" wrapText="true" styleClass="texto-secundario"/>
+    <Label text="Nota de revisión (obligatoria al negar o pedir información)" wrapText="true" styleClass="field-label"/>
+    <TextArea fx:id="txtNota" wrapText="true" prefRowCount="3"/>
+    <HBox spacing="8"><Button text="Aprobar" styleClass="btn" onAction="#aprobar"/>
+      <Button text="Negar" styleClass="btn-danger" onAction="#negar"/></HBox>
+    <Button text="Pedir información" styleClass="btn-ghost" onAction="#pedir"/>
+    <Button text="Anular" styleClass="btn-ghost" onAction="#anular"/>
+    <Button text="Guardar comprobante PDF" styleClass="btn-ghost" onAction="#comprobante"/>
+   </VBox>
+  </ScrollPane>
+ </HBox>
+</VBox>

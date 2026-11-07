@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="edu.uasd.vitasalud.controller.prestador.MisSolicitudesDemoController" spacing="14">
+ <HBox alignment="CENTER_LEFT" spacing="10"><Label text="Mis autorizaciones (vista provisional)" styleClass="section-title"/>
+  <Button text="Actualizar" styleClass="btn-ghost" onAction="#recargar"/></HBox>
+ <HBox spacing="12" VBox.vgrow="ALWAYS">
+  <ListView fx:id="lista" HBox.hgrow="ALWAYS"/>
+  <Label fx:id="detalle" styleClass="card" text="Seleccione autorización" wrapText="true" prefWidth="380"/>
+ </HBox>
+</VBox>

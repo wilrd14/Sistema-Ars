@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<!-- Pantalla extra propuesta por Joel para completar RF-REC-01 en el portal. -->
+<ScrollPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="edu.uasd.vitasalud.controller.prestador.AgregarReclamacionController" fitToWidth="true">
+ <VBox styleClass="card" spacing="12">
+  <Label text="Agregar reclamación por servicio" styleClass="section-title"/>
+  <Label text="Seleccione una autorización propia APROBADA que aún no esté reclamada" styleClass="texto-secundario" wrapText="true"/>
+  <ComboBox fx:id="cbAutorizacion" maxWidth="Infinity" promptText="Autorización"/>
+  <TextField fx:id="txtFactura" promptText="Número de factura"/>
+  <DatePicker fx:id="dpFecha"/>
+  <TextField fx:id="txtMonto" promptText="Monto a reclamar RD$"/>
+  <Button text="Presentar reclamación" styleClass="btn" onAction="#registrar"/>
+  <Label fx:id="lblResultado" styleClass="texto-secundario"/>
+  <Separator/>
+  <Label text="Corregir reclamación DEVUELTA" styleClass="section-title"/>
+  <Label text="Seleccione una devuelta; reutilice los campos de factura, fecha y monto de arriba" styleClass="texto-secundario" wrapText="true"/>
+  <ComboBox fx:id="cbDevueltas" maxWidth="Infinity" promptText="Reclamaciones devueltas"/>
+  <Button text="Reenviar corrección" styleClass="btn-ghost" onAction="#corregir"/>
+  <Separator/><Label text="Mis reclamaciones" styleClass="section-title"/>
+  <Button text="Actualizar" styleClass="btn-ghost" onAction="#recargar"/>
+  <ListView fx:id="listado" prefHeight="220"/>
+ </VBox>
+</ScrollPane>

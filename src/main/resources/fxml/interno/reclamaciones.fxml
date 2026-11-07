@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<!-- REC: Auditoría, glosas y registro de pago (RF-REC-04..06). -->
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="edu.uasd.vitasalud.controller.interno.ReclamacionesController" spacing="12">
+ <HBox alignment="CENTER_LEFT" spacing="10"><Label text="Bandeja de reclamaciones" styleClass="section-title"/>
+  <Button text="Actualizar" styleClass="btn-ghost" onAction="#recargar"/></HBox>
+ <HBox spacing="14" VBox.vgrow="ALWAYS">
+  <TableView fx:id="tabla" HBox.hgrow="ALWAYS" prefWidth="660">
+   <columns>
+    <TableColumn fx:id="colRec" text="REC" prefWidth="95"/>
+    <TableColumn fx:id="colAut" text="AUT" prefWidth="110"/>
+    <TableColumn fx:id="colPrestador" text="Prestador" prefWidth="160"/>
+    <TableColumn fx:id="colMonto" text="Reclamado" prefWidth="110"/>
+    <TableColumn fx:id="colEstado" text="Estado" prefWidth="130"/>
+   </columns>
+  </TableView>
+  <ScrollPane fitToWidth="true" prefWidth="395"><VBox styleClass="card" spacing="10">
+   <Label text="Auditoría médica" styleClass="section-title"/>
+   <Label fx:id="detalle" text="Seleccione reclamación" wrapText="true"/>
+   <Button text="Pasar a auditoría" styleClass="btn-ghost" onAction="#auditar"/>
+   <Button text="Aprobar reclamación" styleClass="btn" onAction="#aprobar"/>
+   <Label text="Nota para devolución o rechazo" styleClass="field-label"/>
+   <TextArea fx:id="txtMotivo" prefRowCount="2" wrapText="true"/>
+   <HBox spacing="8"><Button text="Devolver" styleClass="btn-ghost" onAction="#devolver"/>
+     <Button text="Rechazar" styleClass="btn-danger" onAction="#rechazar"/></HBox>
+   <Separator/>
+   <Label text="Registrar glosa (P1)" styleClass="section-title"/>
+   <ComboBox fx:id="cbMotivo" maxWidth="Infinity"/>
+   <TextField fx:id="txtGlosa" promptText="Monto glosado RD$"/>
+   <TextArea fx:id="txtObs" promptText="Observaciones" prefRowCount="2"/>
+   <Button text="Agregar glosa" styleClass="btn-ghost" onAction="#glosar"/>
+   <Separator/>
+   <Label text="Pago (P1)" styleClass="section-title"/>
+   <DatePicker fx:id="dpPago"/><TextField fx:id="txtReferencia" promptText="Cheque o referencia"/>
+   <Button text="Registrar pago y cerrar" styleClass="btn" onAction="#pagar"/>
+  </VBox></ScrollPane>
+ </HBox>
+</VBox>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<!-- Inicio PROVISIONAL de PRE para probar Joel sin esperar la interfaz final de Luis. -->
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="edu.uasd.vitasalud.controller.prestador.PortalInicioDemoController" spacing="16" styleClass="card">
+ <Label text="Portal del prestador · demostración AUT/REC" styleClass="section-title"/>
+ <Label text="Esta es una vista de integración provisional. Las pantallas de Luis pueden sustituirla." styleClass="texto-secundario" wrapText="true"/>
+ <Label fx:id="lblEstado" text="Consultando datos..."/>
+ <HBox spacing="10"><Button text="Solicitar autorización" styleClass="btn" onAction="#solicitar"/>
+  <Button text="Presentar reclamación" styleClass="btn-ghost" onAction="#reclamar"/>
+  <Button text="Mis solicitudes" styleClass="btn-ghost" onAction="#misSolicitudes"/></HBox>
+</VBox>
