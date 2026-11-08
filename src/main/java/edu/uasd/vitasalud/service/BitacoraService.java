@@ -62,6 +62,12 @@ public class BitacoraService {
         }
     }
 
+    /** Igual que {@link #registrar} pero toma como actor al usuario con sesión activa (null si no hay). */
+    public void registrarDeSesion(String modulo, String accion, String tabla, Long registroId, String detalle) {
+        Long actor = Sesion.activa() && Sesion.getUsuario() != null ? Sesion.getUsuario().getId() : null;
+        registrar(actor, modulo, accion, tabla, registroId, detalle);
+    }
+
     /**
      * Consulta la bitácora filtrando por módulo y rango de fechas (solo Administrador).
      *

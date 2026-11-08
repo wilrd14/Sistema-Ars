@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="edu.uasd.vitasalud.controller.interno.NuevoAfiliadoController">
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="edge-to-edge">
+            <VBox spacing="20">
+
+                <!-- Aviso de éxito -->
+                <HBox fx:id="panelExito" spacing="12" alignment="CENTER_LEFT"
+                      styleClass="alert-success" visible="false" managed="false">
+                    <Label fx:id="lblExito"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="Volver a afiliados" styleClass="btn-ghost" onAction="#cancelar"/>
+                </HBox>
+
+                <!-- 1. Datos personales -->
+                <VBox spacing="16" styleClass="card">
+                    <Label text="1. Datos personales" styleClass="section-title"/>
+                    <GridPane hgap="16" vgap="14">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Tipo de documento" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbTipoDocumento" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="N.º de documento" styleClass="field-label"/>
+                            <TextField fx:id="txtNumeroDocumento" promptText="000-0000000-0" styleClass="field"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <Label text="Nombres" styleClass="field-label"/>
+                            <TextField fx:id="txtNombres" styleClass="field"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <Label text="Apellidos" styleClass="field-label"/>
+                            <TextField fx:id="txtApellidos" styleClass="field"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                            <Label text="NSS" styleClass="field-label"/>
+                            <TextField fx:id="txtNss" styleClass="field"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                            <Label text="Fecha de nacimiento" styleClass="field-label"/>
+                            <DatePicker fx:id="dpFechaNacimiento" maxWidth="Infinity"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                            <Label text="Sexo" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbSexo" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                            <Label text="Estado civil" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbEstadoCivil" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                            <Label text="Nacionalidad" styleClass="field-label"/>
+                            <TextField fx:id="txtNacionalidad" styleClass="field"/>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+
+                <!-- 2. Contacto y dirección -->
+                <VBox spacing="16" styleClass="card">
+                    <Label text="2. Contacto y dirección" styleClass="section-title"/>
+                    <GridPane hgap="16" vgap="14">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Tipo de teléfono" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbTipoTelefono" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="Teléfono" styleClass="field-label"/>
+                            <TextField fx:id="txtTelefono" promptText="(809) 000-0000" styleClass="field"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2">
+                            <Label text="Correo electrónico" styleClass="field-label"/>
+                            <TextField fx:id="txtCorreo" styleClass="field"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                            <Label text="Provincia" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbProvincia" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                            <Label text="Municipio" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbMunicipio" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                            <Label text="Sector" styleClass="field-label"/>
+                            <TextField fx:id="txtSector" styleClass="field"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                            <Label text="Dirección" styleClass="field-label"/>
+                            <TextField fx:id="txtDireccion" styleClass="field"/>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+
+                <!-- 3. Plan y afiliación -->
+                <VBox spacing="16" styleClass="card">
+                    <Label text="3. Plan y afiliación" styleClass="section-title"/>
+                    <GridPane hgap="16" vgap="14">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Tipo de afiliado" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbTipoAfiliado" maxWidth="Infinity"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="Plan" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbPlan" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <Label text="Inicio de cobertura" styleClass="field-label"/>
+                            <DatePicker fx:id="dpInicioCobertura" maxWidth="Infinity"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <Label text="RNC del empleador" styleClass="field-label"/>
+                            <TextField fx:id="txtEmpleadorRnc" promptText="9 dígitos" styleClass="field"/>
+                        </VBox>
+
+                        <CheckBox fx:id="chkEsEstudiante" text="Es estudiante"
+                                  GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+                        <!-- Solo se muestra si el tipo de afiliado es Dependiente -->
+                        <VBox fx:id="bloqueDependiente" spacing="14" visible="false" managed="false"
+                              GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2">
+                            <Label text="Datos del titular" styleClass="section-title"/>
+                            <HBox spacing="12" alignment="BOTTOM_LEFT">
+                                <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                    <Label text="Cédula del titular" styleClass="field-label"/>
+                                    <TextField fx:id="txtCedulaTitular" promptText="000-0000000-0" styleClass="field"/>
+                                </VBox>
+                                <Button text="Buscar titular" styleClass="btn-ghost" onAction="#buscarTitular"/>
+                            </HBox>
+                            <Label fx:id="lblTitularEncontrado" styleClass="texto-secundario"/>
+                            <VBox spacing="6">
+                                <Label text="Parentesco" styleClass="field-label"/>
+                                <ComboBox fx:id="cmbParentesco" maxWidth="Infinity" promptText="Seleccionar"/>
+                            </VBox>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox spacing="12" alignment="CENTER_RIGHT">
+            <padding>
+                <Insets top="12" bottom="12"/>
+            </padding>
+            <Label fx:id="lblMensaje" styleClass="mensaje-error" wrapText="true"
+                   maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+            <Button fx:id="btnCancelar" text="Cancelar" styleClass="btn-ghost" onAction="#cancelar"/>
+            <Button fx:id="btnCrear" text="Crear afiliado" styleClass="btn" onAction="#crearAfiliado"/>
+        </HBox>
+    </bottom>
+</BorderPane>

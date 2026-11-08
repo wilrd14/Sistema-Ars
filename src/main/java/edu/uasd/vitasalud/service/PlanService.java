@@ -15,10 +15,23 @@ public class PlanService {
 
     private final PlanDAO planDAO;
     private final CoberturaDAO coberturaDAO;
+    /** Opcional (RF-SEG-07): null en pruebas que no quieren auditoría. */
+    private final BitacoraService bitacora;
 
     public PlanService(PlanDAO planDAO, CoberturaDAO coberturaDAO) {
+        this(planDAO, coberturaDAO, null);
+    }
+
+    public PlanService(PlanDAO planDAO, CoberturaDAO coberturaDAO, BitacoraService bitacora) {
         this.planDAO = planDAO;
         this.coberturaDAO = coberturaDAO;
+        this.bitacora = bitacora;
+    }
+
+    private void auditar(String accion, Long id, String detalle) {
+        if (bitacora != null) {
+            bitacora.registrarDeSesion("PLA", accion, "plan", id, detalle);
+        }
     }
 
     public Optional<Plan> buscarPorId(String id) throws SQLException {
@@ -35,6 +48,7 @@ public class PlanService {
     public void registrar(Plan plan) throws SQLException {
         validar(plan);
         planDAO.registrar(plan);
+        auditar("CREAR", plan.getId() == null ? null : plan.getId().longValue(), "Plan registrado");
     }
 
     public void actualizar(Plan plan) throws SQLException {
@@ -43,6 +57,7 @@ public class PlanService {
             throw new IllegalArgumentException("El ID del plan es obligatorio.");
         }
         planDAO.actualizar(plan);
+        auditar("ACTUALIZAR", plan.getId().longValue(), "Plan actualizado");
     }
 
     public void eliminar(int id) throws SQLException {
@@ -59,6 +74,7 @@ public class PlanService {
         }
 
         planDAO.eliminar(id);
+        auditar("ELIMINAR", (long) id, "Plan eliminado");
     }
 
     public List<Cobertura> consultarCoberturaPorCategoria(String categoria)
