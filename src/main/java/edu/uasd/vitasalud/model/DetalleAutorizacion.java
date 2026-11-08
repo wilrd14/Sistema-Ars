@@ -3,6 +3,7 @@ package edu.uasd.vitasalud.model;
 import java.math.BigDecimal;
 
 /**
+ * 
  * Esta es la que representa un procedimiento asociado a una autorizacion. 
  * Es la linea de una autorizacion: es to incluye procedimiento, cantidad y montos; una autorizacion
  * tiene 1..N lineas.
