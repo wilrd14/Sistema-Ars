@@ -28,20 +28,34 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-/** Reportes de la Consola interna (RF-REP-02/03) con exportación a CSV y PDF (RF-REP-04). */
+/**
+ * Reportes de la Consola interna (RF-REP-02/03) con exportación a CSV y PDF
+ * (RF-REP-04).
+ */
 public class ReportesController {
 
-    @FXML private FlowPane tarjetas;
-    @FXML private VBox detalle;
-    @FXML private Label lblTitulo;
-    @FXML private Label lblResumen;
-    @FXML private Label lblMensaje;
-    @FXML private DatePicker dpDesde;
-    @FXML private DatePicker dpHasta;
-    @FXML private Button btnGenerar;
-    @FXML private Button btnExportar;
-    @FXML private Button btnExportarPdf;
-    @FXML private TableView<List<String>> tabla;
+    @FXML
+    private FlowPane tarjetas;
+    @FXML
+    private VBox detalle;
+    @FXML
+    private Label lblTitulo;
+    @FXML
+    private Label lblResumen;
+    @FXML
+    private Label lblMensaje;
+    @FXML
+    private DatePicker dpDesde;
+    @FXML
+    private DatePicker dpHasta;
+    @FXML
+    private Button btnGenerar;
+    @FXML
+    private Button btnExportar;
+    @FXML
+    private Button btnExportarPdf;
+    @FXML
+    private TableView<List<String>> tabla;
 
     private final ReporteService servicio = new ReporteService();
     private final Map<Reporte, Button> botones = new EnumMap<>(Reporte.class);
