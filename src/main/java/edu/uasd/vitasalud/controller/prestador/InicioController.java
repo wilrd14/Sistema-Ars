@@ -8,7 +8,7 @@ public class InicioController {
 
     @FXML
     private void abrirBusqueda() {
-        Navegador.irA("busqueda-avanzada");
+        Navegador.irA("busqueda");
     }
 
     @FXML
