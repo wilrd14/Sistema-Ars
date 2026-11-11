@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="edu.uasd.vitasalud.controller.prestador.HospitalizacionController" spacing="12" styleClass="card">
+ <Label text="Hospitalización · registro de ingreso y egreso (P2)" styleClass="section-title"/>
+ <Label text="Introduce el identificador numérico de una autorización aprobada de tu centro" styleClass="texto-secundario"/>
+ <TextField fx:id="txtAut" promptText="ID numérico de autorización"/>
+ <DatePicker fx:id="dpFecha"/>
+ <TextField fx:id="txtObs" promptText="Observaciones"/>
+ <HBox spacing="10"><Button text="Registrar ingreso" styleClass="btn" onAction="#ingresar"/>
+  <Button text="Registrar egreso" styleClass="btn-ghost" onAction="#egresar"/>
+  <Button text="Actualizar" styleClass="btn-ghost" onAction="#recargar"/></HBox>
+ <ListView fx:id="lista" VBox.vgrow="ALWAYS"/>
+</VBox>

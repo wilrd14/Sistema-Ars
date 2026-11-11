@@ -28,24 +28,41 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-/** Reportes de la Consola interna (RF-REP-02/03) con exportación a CSV (RF-REP-04). */
+/**
+ * Reportes de la Consola interna (RF-REP-02/03) con exportación a CSV y PDF
+ * (RF-REP-04).
+ */
 public class ReportesController {
 
-    @FXML private FlowPane tarjetas;
-    @FXML private VBox detalle;
-    @FXML private Label lblTitulo;
-    @FXML private Label lblResumen;
-    @FXML private Label lblMensaje;
-    @FXML private DatePicker dpDesde;
-    @FXML private DatePicker dpHasta;
-    @FXML private Button btnGenerar;
-    @FXML private Button btnExportar;
-    @FXML private TableView<List<String>> tabla;
+    @FXML
+    private FlowPane tarjetas;
+    @FXML
+    private VBox detalle;
+    @FXML
+    private Label lblTitulo;
+    @FXML
+    private Label lblResumen;
+    @FXML
+    private Label lblMensaje;
+    @FXML
+    private DatePicker dpDesde;
+    @FXML
+    private DatePicker dpHasta;
+    @FXML
+    private Button btnGenerar;
+    @FXML
+    private Button btnExportar;
+    @FXML
+    private Button btnExportarPdf;
+    @FXML
+    private TableView<List<String>> tabla;
 
     private final ReporteService servicio = new ReporteService();
     private final Map<Reporte, Button> botones = new EnumMap<>(Reporte.class);
     private Reporte actual;
     private TablaReporte ultima;
+    private LocalDate ultimoDesde;
+    private LocalDate ultimoHasta;
 
     @FXML
     private void initialize() {
@@ -128,6 +145,8 @@ public class ReportesController {
         tarea.setOnSucceeded(e -> {
             btnGenerar.setDisable(false);
             if (reporte == actual) {
+                ultimoDesde = desde;
+                ultimoHasta = hasta;
                 mostrar(tarea.getValue());
             }
         });
@@ -148,6 +167,7 @@ public class ReportesController {
         tabla.getColumns().clear();
         tabla.getItems().clear();
         btnExportar.setDisable(t == null || t.filas().isEmpty());
+        btnExportarPdf.setDisable(t == null || t.filas().isEmpty());
         lblResumen.setText(t == null || t.resumen() == null ? "" : t.resumen());
         if (t == null) {
             return;
@@ -170,7 +190,7 @@ public class ReportesController {
         generar();
     }
 
-    /** RF-REP-04: CSV con BOM y ";" para Excel. PDF queda pendiente (no hay librería en el pom.xml). */
+    /** RF-REP-04: CSV con BOM y ";" para Excel. */
     @FXML
     private void exportar() {
         if (ultima == null || ultima.filas().isEmpty()) {

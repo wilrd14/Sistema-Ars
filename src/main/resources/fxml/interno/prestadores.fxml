@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="edu.uasd.vitasalud.controller.interno.PrestadoresController">
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="edge-to-edge">
+            <VBox spacing="20">
+
+                <Label text="Gestión de prestadores" styleClass="section-title"/>
+
+                <!-- Aviso de éxito -->
+                <HBox fx:id="panelExito" alignment="CENTER_LEFT" styleClass="alert-success"
+                      visible="false" managed="false">
+                    <Label fx:id="lblExito"/>
+                </HBox>
+
+                <!-- Filtros -->
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <TextField fx:id="txtBuscar" promptText="Buscar por nombre o RNC/cédula..."
+                               styleClass="field" HBox.hgrow="ALWAYS"/>
+                    <ComboBox fx:id="cmbFiltroTipo" prefWidth="210"/>
+                    <ComboBox fx:id="cmbFiltroEstado" prefWidth="160"/>
+                    <Button text="Buscar" styleClass="btn-ghost" onAction="#buscar"/>
+                    <Button fx:id="btnNuevo" text="Nuevo prestador" styleClass="btn"
+                            onAction="#nuevoPrestador"/>
+                </HBox>
+
+                <!-- Tabla -->
+                <TableView fx:id="tablaPrestadores" prefHeight="320">
+                    <columns>
+                        <TableColumn fx:id="colRnc" text="RNC / Cédula" prefWidth="130"/>
+                        <TableColumn fx:id="colNombre" text="Nombre" prefWidth="260"/>
+                        <TableColumn fx:id="colTipo" text="Tipo" prefWidth="170"/>
+                        <TableColumn fx:id="colProvincia" text="Provincia" prefWidth="150"/>
+                        <TableColumn fx:id="colTelefono" text="Teléfono" prefWidth="130"/>
+                        <TableColumn fx:id="colEstado" text="Contrato" prefWidth="110"/>
+                    </columns>
+                </TableView>
+
+                <!-- Acciones sobre el prestador seleccionado -->
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Button fx:id="btnEditar" text="Editar" styleClass="btn-ghost"
+                            onAction="#editarPrestador"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="Estado del contrato:" styleClass="field-label"/>
+                    <ComboBox fx:id="cmbNuevoEstado" prefWidth="160"/>
+                    <Button fx:id="btnAplicarEstado" text="Aplicar estado" styleClass="btn-ghost"
+                            onAction="#aplicarEstado"/>
+                </HBox>
+
+                <!-- Formulario de alta y edición -->
+                <VBox fx:id="panelFormulario" spacing="16" styleClass="card"
+                      visible="false" managed="false">
+                    <Label fx:id="lblTituloFormulario" text="Nuevo prestador" styleClass="section-title"/>
+
+                    <GridPane hgap="16" vgap="14">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="RNC o cédula" styleClass="field-label"/>
+                            <TextField fx:id="txtRnc" promptText="9 dígitos o 000-0000000-0" styleClass="field"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="Nombre" styleClass="field-label"/>
+                            <TextField fx:id="txtNombre" styleClass="field"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <Label text="Tipo de prestador" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbTipo" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <Label text="Provincia" styleClass="field-label"/>
+                            <ComboBox fx:id="cmbProvincia" maxWidth="Infinity" promptText="Seleccionar"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2">
+                            <Label text="Dirección" styleClass="field-label"/>
+                            <TextField fx:id="txtDireccion" styleClass="field"/>
+                        </VBox>
+
+                        <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                            <Label text="Teléfono" styleClass="field-label"/>
+                            <TextField fx:id="txtTelefono" promptText="(809) 000-0000" styleClass="field"/>
+                        </VBox>
+                        <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                            <Label text="Correo electrónico" styleClass="field-label"/>
+                            <TextField fx:id="txtCorreo" styleClass="field"/>
+                        </VBox>
+                    </GridPane>
+
+                    <HBox spacing="12" alignment="CENTER_RIGHT">
+                        <Label fx:id="lblMensaje" styleClass="mensaje-error" wrapText="true"
+                               maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                        <Button text="Cancelar" styleClass="btn-ghost" onAction="#cancelarFormulario"/>
+                        <Button text="Guardar" styleClass="btn" onAction="#guardarPrestador"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

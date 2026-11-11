@@ -80,10 +80,41 @@ class PlanServiceTest {
     }
 
     @Test
-    void debeDesactivarPlanCuandoNoTieneAfiliados()
+    void noDebeDesactivarPlanQueTieneCoberturas()
             throws SQLException {
 
         planDAO.tieneAfiliados = false;
+
+        IllegalStateException excepcion = assertThrows(
+            IllegalStateException.class,
+            () -> planService.eliminar(1)
+        );
+
+        assertEquals(
+            "No se puede desactivar un plan que tiene coberturas asociadas.",
+            excepcion.getMessage()
+        );
+
+        assertEquals(0, planDAO.vecesEliminado);
+
+        assertEquals(
+            "ACTIVO",
+            planDAO.planes.get(0).getEstado()
+        );
+    }
+
+    @Test
+    void debeDesactivarPlanCuandoNoTieneAfiliadosNiCoberturas()
+            throws SQLException {
+
+        planDAO.tieneAfiliados = false;
+
+        coberturaDAO.coberturas.removeIf(
+            cobertura ->
+                Integer.valueOf(1).equals(
+                    cobertura.getPlan_id()
+                )
+        );
 
         assertDoesNotThrow(
             () -> planService.eliminar(1)
@@ -407,4 +438,3 @@ class PlanServiceTest {
         }
     }
 }
-

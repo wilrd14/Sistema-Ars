@@ -1,6 +1,7 @@
 
 package edu.uasd.vitasalud.service;
 
+import edu.uasd.vitasalud.app.Sesion;
 import edu.uasd.vitasalud.dao.PlanDAO;
 import edu.uasd.vitasalud.dao.CoberturaDAO;
 import edu.uasd.vitasalud.model.Plan;
@@ -15,10 +16,33 @@ public class PlanService {
 
     private final PlanDAO planDAO;
     private final CoberturaDAO coberturaDAO;
+    private final BitacoraService bitacoraService;
 
     public PlanService(PlanDAO planDAO, CoberturaDAO coberturaDAO) {
+        this(planDAO, coberturaDAO, new BitacoraService());
+    }
+
+    public PlanService(
+            PlanDAO planDAO,
+            CoberturaDAO coberturaDAO,
+            BitacoraService bitacoraService) {
+
         this.planDAO = planDAO;
         this.coberturaDAO = coberturaDAO;
+        this.bitacoraService = bitacoraService;
+    }
+
+    private void auditar(String accion, Long id, String detalle) {
+        if (bitacoraService != null) {
+            bitacoraService.registrar(
+                    obtenerUsuarioId(),
+                    "PLA",
+                    accion,
+                    "plan",
+                    id,
+                    detalle
+            );
+        }
     }
 
     public Optional<Plan> buscarPorId(String id) throws SQLException {
@@ -36,7 +60,18 @@ public class PlanService {
 
     public void registrar(Plan plan) throws SQLException {
         validar(plan);
+
         planDAO.registrar(plan);
+
+        Long registroId = plan.getId() == null
+                ? null
+                : plan.getId().longValue();
+
+        auditar(
+                "CREAR",
+                registroId,
+                "Creación de plan"
+        );
     }
 
     public void actualizar(Plan plan) throws SQLException {
@@ -48,6 +83,12 @@ public class PlanService {
         }
 
         planDAO.actualizar(plan);
+
+        auditar(
+                "ACTUALIZAR",
+                plan.getId().longValue(),
+                "Actualización de plan"
+        );
     }
 
     public void eliminar(int id) throws SQLException {
@@ -64,12 +105,35 @@ public class PlanService {
                     "El plan no existe.");
         }
 
+        // No permitir desactivar planes que tengan afiliados.
         if (planDAO.tieneAfiliados(id)) {
             throw new IllegalStateException(
                     "No se puede desactivar un plan que tiene afiliados.");
         }
 
+        // No permitir desactivar planes que tengan coberturas.
+        boolean tieneCoberturas = coberturaDAO.listarTodo()
+                .stream()
+                .anyMatch(cobertura ->
+                        Integer.valueOf(id).equals(
+                                cobertura.getPlan_id()
+                        )
+                );
+
+        if (tieneCoberturas) {
+            throw new IllegalStateException(
+                    "No se puede desactivar un plan que tiene coberturas asociadas.");
+        }
+
+        // Desactivación lógica.
         planDAO.eliminar(id);
+
+        // Registrar la operación en bitácora.
+        auditar(
+                "ELIMINAR",
+                (long) id,
+                "Desactivación de plan"
+        );
     }
 
     public List<Cobertura> consultarCoberturaPorCategoria(
@@ -87,6 +151,14 @@ public class PlanService {
                         && c.getCategoria().trim().equalsIgnoreCase(
                                 categoriaBuscada))
                 .collect(Collectors.toList());
+    }
+
+    private Long obtenerUsuarioId() {
+        if (!Sesion.activa()) {
+            return null;
+        }
+
+        return Sesion.getUsuario().getId();
     }
 
     private void validar(Plan plan) {
@@ -120,4 +192,3 @@ public class PlanService {
         }
     }
 }
-

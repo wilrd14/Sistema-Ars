@@ -222,4 +222,38 @@ class ReporteServiceTest {
             Files.deleteIfExists(archivo);
         }
     }
+
+    @Test
+    void pdfEmpiezaConCabeceraYNoEstaVacio() {
+        TablaReporte t = new TablaReporte(Reporte.PAGOS, List.of("Prestador", "Monto"),
+                List.of(List.of("Clínica Año Nuevo, ñandú", "RD$ 1,000.00")), "Resumen: total pagado");
+        byte[] pdf = servicio.aPdf(t, LocalDate.of(2026, 1, 1), LocalDate.of(2026, 12, 31));
+        assertTrue(pdf.length > 500);
+        assertEquals("%PDF", new String(pdf, 0, 4, StandardCharsets.US_ASCII));
+    }
+
+    @Test
+    void pdfSinFilasNiFechasTampocoFalla() {
+        TablaReporte t = new TablaReporte(Reporte.AUTORIZACIONES, List.of("Estado", "Cantidad"), List.of(), null);
+        byte[] pdf = servicio.aPdf(t, null, null);
+        assertEquals("%PDF", new String(pdf, 0, 4, StandardCharsets.US_ASCII));
+    }
+
+    @Test
+    void exportarPdfEscribeElArchivo() throws Exception {
+        Path archivo = Files.createTempFile("reporte", ".pdf");
+        try {
+            TablaReporte t = new TablaReporte(Reporte.PAGOS, List.of("Año"), List.of(List.of("ñandú áéíóú")), null);
+            servicio.exportarPdf(t, null, null, archivo);
+            assertTrue(Files.size(archivo) > 0);
+            assertEquals("%PDF", new String(Files.readAllBytes(archivo), 0, 4, StandardCharsets.US_ASCII));
+        } finally {
+            Files.deleteIfExists(archivo);
+        }
+    }
+
+    @Test
+    void nombreArchivoPdfTerminaEnPdf() {
+        assertTrue(ReporteService.nombreArchivoPdf(Reporte.PAGOS).endsWith(".pdf"));
+    }
 }

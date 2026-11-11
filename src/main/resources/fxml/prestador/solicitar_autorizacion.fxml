@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<!-- Las pestañas son los 3 pasos de RF-AUT-01; la lógica está en SolicitarController. -->
+<ScrollPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="edu.uasd.vitasalud.controller.prestador.SolicitarController" fitToWidth="true">
+ <VBox spacing="12" styleClass="card">
+  <Label text="Nueva autorización · tres pasos" styleClass="section-title"/>
+  <TabPane fx:id="pasos" tabClosingPolicy="UNAVAILABLE">
+   <Tab text="1. Asegurado">
+    <VBox spacing="10">
+     <Label text="Buscar por cédula, NSS o nombre" styleClass="field-label"/>
+     <HBox spacing="10"><TextField fx:id="txtBuscar" promptText="Ej. 00100000001" HBox.hgrow="ALWAYS" onAction="#buscar"/><Button text="Buscar" styleClass="btn" onAction="#buscar"/></HBox>
+     <ListView fx:id="listaAfiliados" prefHeight="185"/>
+     <Label fx:id="lblElegido" text="Seleccione el afiliado"/>
+     <Button text="Siguiente →" styleClass="btn" onAction="#siguiente1"/>
+    </VBox>
+   </Tab>
+   <Tab text="2. Servicio">
+    <VBox spacing="10">
+     <Label text="Fecha del servicio" styleClass="field-label"/><DatePicker fx:id="dpFecha"/>
+     <Label text="Tipo de teléfono" styleClass="field-label"/><ComboBox fx:id="cbTipoTelefono"/>
+     <TextField fx:id="txtServicio" promptText="Tipo de servicio (consulta, laboratorio, imágenes...)"/>
+     <TextField fx:id="txtMedico" promptText="Médico prescriptor"/>
+     <TextField fx:id="txtTelefono" promptText="Teléfono de contacto"/>
+     <TextField fx:id="txtCorreo" promptText="Correo (opcional)"/>
+     <TextField fx:id="txtCie" promptText="Código diagnóstico CIE-10"/>
+     <TextField fx:id="txtDiagnostico" promptText="Descripción del diagnóstico"/>
+     <CheckBox fx:id="chkLaboral" text="Origen laboral / ARL"/>
+     <Button text="Siguiente →" styleClass="btn" onAction="#siguiente2"/>
+    </VBox>
+   </Tab>
+   <Tab text="3. Procedimientos">
+    <VBox spacing="10">
+     <Label text="El monto representa el total solicitado de la línea (cantidad × precio)" styleClass="texto-secundario" wrapText="true"/>
+     <ComboBox fx:id="cbProcedimiento" promptText="Procedimiento del catálogo" maxWidth="Infinity"/>
+     <HBox spacing="10"><TextField fx:id="txtCantidad" promptText="Cantidad"/><TextField fx:id="txtMonto" promptText="Monto RD$"/><Button text="Agregar" styleClass="btn-ghost" onAction="#agregar"/></HBox>
+     <ListView fx:id="listaDetalles" prefHeight="195"/>
+     <Button text="Quitar procedimiento seleccionado" styleClass="btn-ghost" onAction="#quitar"/>
+     <Button text="Enviar solicitud" styleClass="btn" onAction="#enviar"/>
+    </VBox>
+   </Tab>
+  </TabPane>
+  <Label fx:id="lblResultado" text="El número AUT-###### aparecerá aquí" styleClass="texto-secundario" wrapText="true"/>
+ </VBox>
+</ScrollPane>

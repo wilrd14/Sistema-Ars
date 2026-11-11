@@ -56,7 +56,7 @@ public final class Menu {
                     "interno/afiliados.fxml",
                     EnumSet.of(ADMINISTRADOR, ANALISTA_AUTORIZACIONES, AGENTE_AFILIACION), LIANNELIS),
             new Item("nuevo-afiliado", null, "Nuevo afiliado", "Registra un titular y sus dependientes",
-                    "interno/nuevo_afiliado.fxml", EnumSet.of(ADMINISTRADOR, AGENTE_AFILIACION), LIANNELIS),
+        "interno/NuevoAfiliado.fxml", EnumSet.of(ADMINISTRADOR, AGENTE_AFILIACION), LIANNELIS),
             new Item("prestadores", null, "Red de prestadores", "Clínicas, laboratorios y médicos contratados",
                     "interno/prestadores.fxml", EnumSet.of(ADMINISTRADOR, ANALISTA_AUTORIZACIONES), LIANNELIS),
             new Item("planes", null, "Planes y coberturas", "Planes, coberturas, procedimientos y tarifario",
