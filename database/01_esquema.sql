@@ -182,6 +182,8 @@ CREATE TABLE autorizacion (
     fecha_decision            DATETIME,
     tipo_servicio             VARCHAR(30),
     medico_prescriptor        VARCHAR(120),
+    fecha_servicio            DATE,
+    tipo_telefono             VARCHAR(15),
     telefono_contacto         VARCHAR(20),
     correo_contacto           VARCHAR(120),
     diagnostico_cie10         VARCHAR(10),
