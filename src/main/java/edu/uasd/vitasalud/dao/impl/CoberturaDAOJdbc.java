@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CoberturaDAOImpI implements CoberturaDAO {
+public class CoberturaDAOJdbc implements CoberturaDAO  {
 
     @Override
     public Optional<Cobertura> buscarPorId(Long id) throws SQLException {

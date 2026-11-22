@@ -1,13 +1,80 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<!-- Inicio PROVISIONAL de PRE para probar Joel sin esperar la interfaz final de Luis. -->
-<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="edu.uasd.vitasalud.controller.prestador.PortalInicioDemoController" spacing="16" styleClass="card">
- <Label text="Portal del prestador · demostración AUT/REC" styleClass="section-title"/>
- <Label text="Esta es una vista de integración provisional. Las pantallas de Luis pueden sustituirla." styleClass="texto-secundario" wrapText="true"/>
- <Label fx:id="lblEstado" text="Consultando datos..."/>
- <HBox spacing="10"><Button text="Solicitar autorización" styleClass="btn" onAction="#solicitar"/>
-  <Button text="Presentar reclamación" styleClass="btn-ghost" onAction="#reclamar"/>
-  <Button text="Mis solicitudes" styleClass="btn-ghost" onAction="#misSolicitudes"/></HBox>
-</VBox>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="edu.uasd.vitasalud.controller.prestador.InicioController">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="header">
+            <padding>
+                <Insets top="20.0" right="24.0" bottom="20.0" left="24.0"/>
+            </padding>
+
+            <Label text="ARS VitaSalud" styleClass="logo-mark"/>
+            <Label text="Portal del prestador"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="18.0">
+            <padding>
+                <Insets top="30.0" right="30.0" bottom="30.0" left="30.0"/>
+            </padding>
+
+            <Label text="Bienvenido al portal del prestador"
+                   styleClass="title"/>
+
+            <Label text="Selecciona la función que deseas utilizar."
+                   styleClass="subtitle"/>
+
+            <Separator/>
+
+            <Label text="Gestión de servicios" styleClass="section-title"/>
+
+            <Button text="Buscar procedimientos"
+                    onAction="#abrirBusqueda"
+                    styleClass="btn"
+                    maxWidth="Infinity"
+                    prefHeight="45.0"/>
+
+            <Button text="Mis solicitudes"
+                    onAction="#abrirMisSolicitudes"
+                    styleClass="btn"
+                    maxWidth="Infinity"
+                    prefHeight="45.0"/>
+
+            <Button text="Consultar reportes"
+                    onAction="#abrirReportes"
+                    styleClass="btn"
+                    maxWidth="Infinity"
+                    prefHeight="45.0"/>
+
+            <Button text="Precertificaciones"
+                    onAction="#abrirPrecertificaciones"
+                    styleClass="btn"
+                    maxWidth="Infinity"
+                    prefHeight="45.0"/>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="12.0" right="24.0" bottom="12.0" left="24.0"/>
+            </padding>
+
+            <Label text="ARS VitaSalud | Portal del prestador"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
+
+
+

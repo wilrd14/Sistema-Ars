@@ -295,10 +295,11 @@ class BitacoraCableadoTest {
     }
 
     private static class PlanFalso implements PlanDAO {
-        @Override public Optional<Plan> buscarPorId(String id) { return Optional.empty(); }
+        @Override public Optional<Plan> buscarPorId(String id) { return Optional.of(plan(id == null ? 1 : Integer.parseInt(id))); }
         @Override public List<Plan> listarTodo() { return List.of(); }
         @Override public void registrar(Plan p) { }
         @Override public void actualizar(Plan p) { }
+        @Override public boolean tieneAfiliados(int id) throws SQLException {return false;}
         @Override public void eliminar(int id) { }
     }
 
@@ -311,3 +312,4 @@ class BitacoraCableadoTest {
         @Override public void eliminar(Long id) { }
     }
 }
+
