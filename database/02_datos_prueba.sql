@@ -252,3 +252,168 @@ INSERT INTO afiliado (tipo_documento, numero_documento, nss, nombres, apellidos,
 UPDATE afiliado
 SET numero_afiliado = CONCAT('AF-', LPAD(id, 6, '0'))
 WHERE numero_afiliado IS NULL;
+
+
+-- ARS VitaSalud | Datos de prueba de Joel (AUT + REC)
+-- Pegar al final de 02_datos_prueba.sql, después de los otros módulos.
+-- Reutiliza afiliados, prestadores, usuarios, planes y tarifas existentes.
+
+-- 1. Preparar 10 casos de autorización.
+DROP TEMPORARY TABLE IF EXISTS tmp_aut_joel;
+
+CREATE TEMPORARY TABLE tmp_aut_joel (
+    numero VARCHAR(12) PRIMARY KEY,
+    nss VARCHAR(20) NOT NULL,
+    usuario VARCHAR(50) NOT NULL,
+    procedimiento VARCHAR(20) NOT NULL,
+    estado VARCHAR(12) NOT NULL,
+    dias_atras INT NOT NULL
+);
+
+INSERT INTO tmp_aut_joel VALUES
+    ('AUT-990001','10000000001','clinica1','CON001','PENDIENTE',1),
+    ('AUT-990002','10000000001','laboratorio2','LAB001','APROBADA',2),
+    ('AUT-990003','10000000002','clinica1','CON001','PENDIENTE',3),
+    ('AUT-990004','10000000001','clinica1','CON001','APROBADA',4),
+    ('AUT-990005','10000000003','clinica1','CON001','NEGADA',5),
+    ('AUT-990006','10000000005','laboratorio2','LAB001','EN_REVISION',6),
+    ('AUT-990007','10000000007','clinica1','CON001','PENDIENTE',7),
+    ('AUT-990008','10000000008','laboratorio2','LAB001','PENDIENTE',8),
+    ('AUT-990009','10000000002','clinica1','CON001','PENDIENTE',9),
+    ('AUT-990010','10000000003','laboratorio2','LAB001','PENDIENTE',10);
+
+-- 2. Guardar autorizaciones sin duplicar números.
+-- Los importes aprobados se calculan con la cobertura de PLA.
+INSERT INTO autorizacion (
+    numero, afiliado_id, prestador_id, usuario_solicita_id,
+    usuario_revisa_id, fecha_solicitud, fecha_decision,
+    tipo_servicio, fecha_servicio, tipo_telefono,
+    medico_prescriptor, telefono_contacto,
+    diagnostico_cie10, diagnostico_desc,
+    monto_solicitado, monto_cubierto, copago,
+    estado, nota_revision, fecha_vencimiento
+)
+SELECT
+    d.numero, af.id, u.prestador_id, u.id,
+    CASE WHEN d.estado IN ('APROBADA','NEGADA')
+         THEN analista.id ELSE NULL END,
+    DATE_SUB(NOW(), INTERVAL d.dias_atras DAY),
+    CASE WHEN d.estado IN ('APROBADA','NEGADA')
+         THEN NOW() ELSE NULL END,
+    pr.categoria, CURDATE(), 'CELULAR',
+    'Doctor Demo', '809-555-0199',
+    'Z00.0', 'Caso ficticio para pruebas',
+    pr.precio_referencia,
+    CASE WHEN d.estado = 'APROBADA' THEN
+        ROUND(
+            LEAST(pr.precio_referencia,
+                  COALESCE(t.monto, pr.precio_referencia))
+            * cob.porcentaje / 100, 2
+        )
+    ELSE NULL END,
+    CASE WHEN d.estado = 'APROBADA' THEN
+        COALESCE(
+            cob.copago_fijo,
+            GREATEST(0,
+                pr.precio_referencia -
+                ROUND(
+                    LEAST(pr.precio_referencia,
+                          COALESCE(t.monto, pr.precio_referencia))
+                    * cob.porcentaje / 100, 2
+                )
+            )
+        )
+    ELSE NULL END,
+    d.estado,
+    CASE d.estado
+        WHEN 'NEGADA' THEN 'Caso ficticio: solicitud negada'
+        WHEN 'EN_REVISION' THEN 'Caso ficticio: información adicional'
+        ELSE NULL
+    END,
+    CASE WHEN d.estado = 'APROBADA'
+         THEN DATE_ADD(CURDATE(), INTERVAL 30 DAY)
+         ELSE NULL END
+FROM tmp_aut_joel d
+JOIN afiliado af
+    ON af.nss = d.nss AND af.estado = 'ACTIVO'
+JOIN usuario u
+    ON u.username = d.usuario AND u.estado = 'ACTIVO'
+JOIN prestador ps
+    ON ps.id = u.prestador_id
+    AND ps.estado_contrato = 'ACTIVO'
+JOIN procedimiento pr
+    ON pr.codigo = d.procedimiento
+LEFT JOIN cobertura cob
+    ON cob.plan_id = af.plan_id AND cob.categoria = pr.categoria
+LEFT JOIN tarifa t
+    ON t.prestador_id = ps.id AND t.procedimiento_id = pr.id
+LEFT JOIN usuario analista
+    ON analista.username = 'analista'
+WHERE (
+    d.estado <> 'APROBADA'
+    OR (cob.id IS NOT NULL AND analista.id IS NOT NULL)
+)
+AND NOT EXISTS (
+    SELECT 1 FROM autorizacion a WHERE a.numero = d.numero
+);
+
+-- 3. Vincular procedimientos a las autorizaciones.
+INSERT INTO detalle_autorizacion (
+    autorizacion_id, procedimiento_id, cantidad,
+    monto_solicitado, monto_cubierto
+)
+SELECT a.id, pr.id, 1, a.monto_solicitado, a.monto_cubierto
+FROM tmp_aut_joel d
+JOIN autorizacion a ON a.numero = d.numero
+JOIN procedimiento pr ON pr.codigo = d.procedimiento
+WHERE NOT EXISTS (
+    SELECT 1 FROM detalle_autorizacion x
+    WHERE x.autorizacion_id = a.id
+      AND x.procedimiento_id = pr.id
+);
+
+-- 4. Registrar 2 reclamaciones sobre autorizaciones aprobadas.
+INSERT INTO reclamacion (
+    numero, autorizacion_id, prestador_id, factura_prestador,
+    fecha_servicio, monto_reclamado, monto_glosado,
+    monto_pagar, estado
+)
+SELECT d.numero, a.id, a.prestador_id, d.factura,
+       a.fecha_servicio, d.monto, 0.00, d.monto, 'RECIBIDA'
+FROM (
+    SELECT 'REC-990001' numero,
+           'AUT-990002' aut_numero,
+           'FACT-JOEL-001' factura,
+           200.00 monto
+    UNION ALL
+    SELECT 'REC-990002', 'AUT-990004',
+           'FACT-JOEL-002', 300.00
+) d
+JOIN autorizacion a ON a.numero = d.aut_numero
+WHERE a.estado = 'APROBADA'
+  AND a.monto_cubierto >= d.monto
+  AND NOT EXISTS (
+      SELECT 1 FROM reclamacion r WHERE r.numero = d.numero
+  )
+  AND NOT EXISTS (
+      SELECT 1 FROM reclamacion r WHERE r.autorizacion_id = a.id
+  );
+
+-- 5. Verificar los resultados.
+SELECT
+    (SELECT COUNT(*) FROM autorizacion
+     WHERE numero LIKE 'AUT-99%') AS aut_joel,
+    (SELECT COUNT(*) FROM reclamacion
+     WHERE numero LIKE 'REC-99%') AS rec_joel;
+
+-- Muestra los casos que no pudieron insertarse.
+SELECT d.numero AS autorizacion_no_creada,
+       d.nss, d.usuario, d.procedimiento
+FROM tmp_aut_joel d
+LEFT JOIN autorizacion a ON a.numero = d.numero
+WHERE a.id IS NULL;
+
+DROP TEMPORARY TABLE IF EXISTS tmp_aut_joel;
+
+
+
