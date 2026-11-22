@@ -54,6 +54,17 @@ INSERT INTO cobertura (plan_id, categoria, porcentaje, copago_fijo, tope_anual, 
           UNION ALL SELECT 'IMAGENES', 70.00, 60000.00, 30, TRUE) c
     WHERE p.codigo = 'PDSS';
 
+-- Planes complementarios (valores de prueba, superiores al PDSS; incluyen TERAPIA).
+INSERT INTO cobertura (plan_id, categoria, porcentaje, copago_fijo, tope_anual, dias_carencia, requiere_precertificacion)
+    SELECT p.id, c.categoria, IF(p.codigo = 'ORO', c.pct_oro, c.pct_plata),
+           NULL, IF(p.codigo = 'ORO', c.tope_oro, c.tope_plata), c.carencia, c.precert
+    FROM plan p
+    JOIN (SELECT 'CONSULTA' AS categoria, 90.00 AS pct_plata, 100.00 AS pct_oro, 50000.00 AS tope_plata, 80000.00 AS tope_oro, 0 AS carencia, FALSE AS precert
+          UNION ALL SELECT 'LABORATORIO', 90.00, 100.00, 60000.00, 100000.00, 0, FALSE
+          UNION ALL SELECT 'IMAGENES', 80.00, 90.00, 90000.00, 150000.00, 30, TRUE
+          UNION ALL SELECT 'TERAPIA', 80.00, 90.00, 40000.00, 70000.00, 0, FALSE) c
+    WHERE p.codigo IN ('PLATA', 'ORO');
+
 -- ======================= SEG: usuarios de prueba =======================
 -- Contraseña de TODOS los usuarios de prueba: Vita2026!   (hash BCrypt)
 -- Dos usuarios prestador de centros distintos, para probar el aislamiento de datos (RN-07).
